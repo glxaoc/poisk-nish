@@ -579,5 +579,36 @@ def api_analyze():
     })
 
 
+
+@app.route('/api/ai-analyze')
+def api_ai_analyze():
+    """ИИ-анализ ниши"""
+    from database import get_all_queries
+    from clusterer import clusterize
+    from analyzer import analyze_niche
+    from ai_analyzer import generate_ai_analysis
+    
+    region = request.args.get("region", 225, type=int)
+    phrase = request.args.get("phrase", "")
+    
+    queries = get_all_queries(region)
+    if not queries:
+        return jsonify({"error": "No data"})
+    
+    clusters = clusterize(queries, phrase)
+    analysis = analyze_niche(queries, clusters, phrase)
+    
+    # Генерируем ИИ-анализ
+    ai_result = generate_ai_analysis(phrase, analysis["metrics"], clusters["clusters"])
+    
+    return jsonify({
+        "phrase": phrase,
+        "ai_summary": ai_result.get("summary", ""),
+        "ai_scenarios": ai_result.get("scenarios", []),
+        "ai_risks": ai_result.get("risks", []),
+        "_tokens": ai_result.get("_tokens", 0)
+    })
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, threaded=True)

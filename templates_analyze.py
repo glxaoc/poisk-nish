@@ -1,5 +1,5 @@
 """
-HTML шаблон страницы анализа ниши v2
+HTML шаблон страницы анализа ниши v3 - с ИИ
 """
 
 ANALYZE_HTML = r'''<!DOCTYPE html>
@@ -42,8 +42,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
 @media(max-width:900px){.grid-2{grid-template-columns:1fr}}
 
-.card{background:white;border-radius:12px;padding:25px;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
-.card h3{margin-bottom:20px;color:#333;font-size:1.1em}
+.card{background:white;border-radius:12px;padding:25px;box-shadow:0 2px 10px rgba(0,0,0,0.05);margin-bottom:20px}
+.card h3{margin-bottom:15px;color:#333;font-size:1.1em;display:flex;align-items:center;gap:10px}
 
 .chart-container{position:relative;height:280px}
 
@@ -69,6 +69,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .insight-icon{font-size:1.5em}
 .insight-title{font-weight:600;color:#333}
 .insight-text{color:#666;font-size:14px;line-height:1.5}
+
+/* AI Block */
+.ai-card{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);border-radius:16px;padding:30px;color:white;margin-bottom:20px}
+.ai-card h3{color:#fff;margin-bottom:20px;font-size:1.3em}
+.ai-summary{font-size:16px;line-height:1.7;margin-bottom:25px;color:#e0e0e0}
+.ai-section{margin-bottom:20px}
+.ai-section-title{font-weight:600;margin-bottom:12px;color:#a0a0ff;font-size:14px;text-transform:uppercase;letter-spacing:1px}
+.ai-list{list-style:none}
+.ai-list li{padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;gap:12px;align-items:flex-start}
+.ai-list li:last-child{border-bottom:none}
+.ai-list .icon{font-size:1.2em}
+.ai-list .text{color:#d0d0d0;font-size:14px;line-height:1.5}
+.ai-loading{text-align:center;padding:40px;color:#888}
+.ai-loading .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#667eea;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 /* Recommendations */
 .recs-card{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:12px;padding:25px;color:white;margin-bottom:20px}
@@ -132,10 +147,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 </div>
 
+<!-- AI Analysis Block -->
+<div class="ai-card" id="aiCard">
+<h3>🧠 Анализ от ИИ</h3>
+<div id="aiContent">
+<div class="ai-loading">
+<div class="spinner"></div>
+<div>Генерируем анализ...</div>
+</div>
+</div>
+</div>
+
 <div class="insights-grid" id="insightsGrid"></div>
 
 <div class="recs-card" id="recsCard" style="display:none">
-<h3>💡 Рекомендации</h3>
+<h3>💡 Рекомендации алгоритма</h3>
 <div id="recsList"></div>
 </div>
 
@@ -223,8 +249,55 @@ async function loadResults() {
         
         document.getElementById('progressBar').classList.remove('active');
         document.getElementById('results').classList.add('active');
+        
+        // Load AI analysis async
+        loadAIAnalysis(phrase, region);
+        
     } catch(e) { alert('Ошибка: ' + e); }
     resetUI();
+}
+
+async function loadAIAnalysis(phrase, region) {
+    document.getElementById('aiContent').innerHTML = '<div class="ai-loading"><div class="spinner"></div><div>Генерируем анализ...</div></div>';
+    
+    try {
+        var resp = await fetch('/api/ai-analyze?phrase=' + encodeURIComponent(phrase) + '&region=' + region);
+        var data = await resp.json();
+        
+        var html = '';
+        
+        // Summary
+        if (data.ai_summary) {
+            html += '<div class="ai-summary">' + data.ai_summary + '</div>';
+        }
+        
+        // Scenarios
+        if (data.ai_scenarios && data.ai_scenarios.length > 0) {
+            html += '<div class="ai-section">';
+            html += '<div class="ai-section-title">🎯 Сценарии входа</div>';
+            html += '<ul class="ai-list">';
+            data.ai_scenarios.forEach(function(s, i) {
+                html += '<li><span class="icon">' + (i+1) + '.</span><span class="text">' + s + '</span></li>';
+            });
+            html += '</ul></div>';
+        }
+        
+        // Risks
+        if (data.ai_risks && data.ai_risks.length > 0) {
+            html += '<div class="ai-section">';
+            html += '<div class="ai-section-title">⚠️ Риски</div>';
+            html += '<ul class="ai-list">';
+            data.ai_risks.forEach(function(r) {
+                html += '<li><span class="icon">•</span><span class="text">' + r + '</span></li>';
+            });
+            html += '</ul></div>';
+        }
+        
+        document.getElementById('aiContent').innerHTML = html || '<div style="color:#888">Не удалось получить анализ</div>';
+        
+    } catch(e) {
+        document.getElementById('aiContent').innerHTML = '<div style="color:#888">Ошибка загрузки ИИ-анализа</div>';
+    }
 }
 
 function updateProgress(pct, text) {
