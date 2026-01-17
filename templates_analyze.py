@@ -92,6 +92,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .rec-item:last-child{border-bottom:none}
 .rec-icon{font-size:1.3em}
 .rec-text{font-size:14px;line-height:1.5}
+/* Progress bars for metrics */
+.metric-bar{background:#e0e0e0;border-radius:10px;height:8px;overflow:hidden;margin-top:8px}
+.metric-bar-fill{height:100%;border-radius:10px;transition:width 0.5s ease}
+.metric-bar-fill.size{background:linear-gradient(90deg,#667eea,#764ba2)}
+.metric-bar-fill.competition{background:linear-gradient(90deg,#22c55e,#eab308,#ef4444)}
+.metric-index{font-size:24px;font-weight:700;color:#333}
+.metric-label{font-size:12px;color:#888;margin-top:4px}
+/* Verdict block */
+.verdict-card{border-radius:16px;padding:25px;margin-bottom:20px;text-align:center}
+.verdict-card.recommended{background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%);color:white}
+.verdict-card.conditional{background:linear-gradient(135deg,#eab308 0%,#ca8a04 100%);color:white}
+.verdict-card.not_recommended{background:linear-gradient(135deg,#ef4444 0%,#dc2626 100%);color:white}
+.verdict-card.uncertain{background:linear-gradient(135deg,#6b7280 0%,#4b5563 100%);color:white}
+.verdict-icon{font-size:3em;margin-bottom:10px}
+.verdict-label{font-size:1.5em;font-weight:700;margin-bottom:10px}
+.verdict-reason{font-size:14px;opacity:0.9}
+/* AI v2 styles */
+.ai-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.ai-tag{padding:6px 12px;border-radius:20px;font-size:13px;font-weight:500}
+.ai-tag.green{background:#dcfce7;color:#166534}
+.ai-tag.red{background:#fee2e2;color:#991b1b}
+.scenario-card{background:#f8fafc;border-radius:12px;padding:15px;margin:10px 0;border-left:4px solid #667eea}
+.scenario-name{font-weight:600;font-size:15px;color:#1e293b;margin-bottom:8px}
+.scenario-cluster{font-size:12px;color:#667eea;margin-bottom:6px}
+.scenario-logic{font-size:14px;color:#475569;margin-bottom:6px}
+.scenario-risk{font-size:13px;color:#dc2626;background:#fef2f2;padding:6px 10px;border-radius:6px;margin-top:8px}
+/* Summary block */
+.summary-card{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);border-radius:16px;padding:25px;color:white;margin-top:20px}
+.summary-card h3{margin-bottom:20px;font-size:1.3em}
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px}
+.summary-item{background:rgba(255,255,255,0.1);border-radius:12px;padding:15px;text-align:center}
+.summary-label{font-size:12px;color:#94a3b8;margin-bottom:5px}
+.summary-value{font-size:18px;font-weight:700}
+.summary-directions{margin-bottom:15px}
+.summary-directions .summary-label{margin-bottom:10px}
+.summary-direction-tag{display:inline-block;background:rgba(102,126,234,0.3);color:#a5b4fc;padding:6px 12px;border-radius:20px;margin:4px;font-size:13px}
+.summary-verdict{background:rgba(255,255,255,0.1);border-radius:12px;padding:15px;text-align:center;font-size:16px;font-weight:600}
 </style>
 </head>
 <body>
@@ -111,6 +148,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <select id="region">
 <option value="225" selected>Россия</option>
 <option value="213">Москва</option>
+<option value="22">Калининград</option>
 <option value="2">Санкт-Петербург</option>
 </select>
 </div>
@@ -123,6 +161,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 
 <div class="results" id="results">
+
+<!-- Verdict -->
+<div class="verdict-card" id="verdictCard" style="display:none">
+<div class="verdict-icon" id="verdictIcon"></div>
+<div class="verdict-label" id="verdictLabel"></div>
+<div class="verdict-reason" id="verdictReason"></div>
+</div>
 
 <div class="stats-row">
 <div class="stat-card">
@@ -137,13 +182,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="stat-value" id="statClusters">0</div>
 <div class="stat-label">Направлений</div>
 </div>
+</div>
+
+<!-- Metrics with progress bars -->
+<div class="stats-row" style="margin-top:15px">
 <div class="stat-card">
-<div class="stat-value" id="statSize">—</div>
-<div class="stat-label">Размер ниши</div>
+<div class="metric-index" id="sizeIndex">0</div>
+<div class="metric-label">Размер ниши</div>
+<div class="metric-bar"><div class="metric-bar-fill size" id="sizeBar" style="width:0%"></div></div>
+<div style="font-size:12px;color:#666;margin-top:5px" id="sizeLabel"></div>
 </div>
 <div class="stat-card">
-<div class="stat-value" id="statCompetition">—</div>
-<div class="stat-label">Конкуренция</div>
+<div class="metric-index" id="compIndex">0</div>
+<div class="metric-label">Конкуренция</div>
+<div class="metric-bar"><div class="metric-bar-fill competition" id="compBar" style="width:0%"></div></div>
+<div style="font-size:12px;color:#666;margin-top:5px" id="compLabel"></div>
+</div>
+<div class="stat-card">
+<div class="metric-index" id="seasonIndex">×1.0</div>
+<div class="metric-label">Сезонность</div>
+<div style="font-size:12px;color:#666;margin-top:8px" id="seasonLabel"></div>
+</div>
+<div class="stat-card">
+<div class="metric-index" id="growthIndex" style="color:#22c55e">+0%</div>
+<div class="metric-label">Рост за год</div>
+<div style="font-size:12px;color:#666;margin-top:8px" id="growthLabel"></div>
 </div>
 </div>
 
@@ -176,6 +239,30 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <h3>📋 Кластеры запросов</h3>
 <div class="cluster-list" id="clusterList"></div>
 </div>
+</div>
+
+<!-- Summary Block -->
+<div class="summary-card" id="summaryCard" style="display:none">
+<h3>📋 Итог по нише</h3>
+<div class="summary-grid">
+<div class="summary-item">
+<div class="summary-label">Размер</div>
+<div class="summary-value" id="sumSize">—</div>
+</div>
+<div class="summary-item">
+<div class="summary-label">Конкуренция</div>
+<div class="summary-value" id="sumComp">—</div>
+</div>
+<div class="summary-item">
+<div class="summary-label">Сезон</div>
+<div class="summary-value" id="sumSeason">—</div>
+</div>
+</div>
+<div class="summary-directions">
+<div class="summary-label">Топ направления:</div>
+<div id="sumDirections"></div>
+</div>
+<div class="summary-verdict" id="sumVerdict"></div>
 </div>
 
 </div>
@@ -225,15 +312,63 @@ async function loadResults() {
     var region = parseInt(document.getElementById('region').value);
     
     try {
-        var resp = await fetch('/api/analyze?phrase=' + encodeURIComponent(phrase) + '&region=' + region);
+        var resp = await fetch('/api/analyze-v2?phrase=' + encodeURIComponent(phrase) + '&region=' + region);
         var data = await resp.json();
         
         // Stats
         document.getElementById('statTotal').textContent = fmt(data.total_count);
         document.getElementById('statQueries').textContent = fmt(data.total_queries);
         document.getElementById('statClusters').textContent = data.clusters_count;
-        document.getElementById('statSize').innerHTML = data.metrics.niche_size_icon + ' ' + data.metrics.niche_size;
-        document.getElementById('statCompetition').innerHTML = data.metrics.competition_icon + ' ' + data.metrics.competition;
+        
+        // Verdict
+        if (data.verdict) {
+            var vc = document.getElementById('verdictCard');
+            vc.className = 'verdict-card ' + data.verdict.verdict;
+            vc.style.display = 'block';
+            document.getElementById('verdictIcon').textContent = data.verdict.verdict_icon;
+            document.getElementById('verdictLabel').textContent = data.verdict.verdict_label;
+            document.getElementById('verdictReason').textContent = data.verdict.reason;
+        }
+        
+        // Size metric
+        if (data.size) {
+            document.getElementById('sizeIndex').textContent = Math.round(data.size.size_index);
+            document.getElementById('sizeBar').style.width = data.size.size_index + '%';
+            document.getElementById('sizeLabel').innerHTML = data.size.size_icon + ' ' + data.size.size_label;
+        }
+        
+        // Competition metric
+        if (data.competition) {
+            document.getElementById('compIndex').textContent = Math.round(data.competition.competition_index);
+            document.getElementById('compBar').style.width = data.competition.competition_index + '%';
+            document.getElementById('compLabel').innerHTML = data.competition.competition_icon + ' ' + data.competition.competition_label;
+        }
+        
+        // Seasonality
+        if (data.seasonality) {
+            var coef = data.seasonality.coefficient;
+            document.getElementById('seasonIndex').textContent = '×' + coef.toFixed(2);
+            var trend = data.seasonality.trend;
+            var trendIcon = trend === 'growing' ? '📈' : trend === 'declining' ? '📉' : '➡️';
+            document.getElementById('seasonLabel').innerHTML = trendIcon + ' ' + (coef < 0.8 ? 'низкий сезон' : coef > 1.2 ? 'высокий сезон' : 'норма');
+            
+            // Yearly growth
+            var growth = data.seasonality.yearly_growth || 0;
+            var growthEl = document.getElementById('growthIndex');
+            var growthLabel = document.getElementById('growthLabel');
+            var prefix = growth >= 0 ? '+' : '';
+            growthEl.textContent = prefix + growth.toFixed(0) + '%';
+            growthEl.style.color = growth >= 0 ? '#22c55e' : '#ef4444';
+            if (growth > 50) {
+                growthLabel.innerHTML = '🚀 быстрый рост';
+            } else if (growth > 10) {
+                growthLabel.innerHTML = '📈 растёт';
+            } else if (growth > -10) {
+                growthLabel.innerHTML = '➡️ стабильно';
+            } else {
+                growthLabel.innerHTML = '📉 падает';
+            }
+        }
         
         // Insights
         renderInsights(data.insights);
@@ -246,6 +381,9 @@ async function loadResults() {
         
         // Clusters
         renderClusterList(data.clusters);
+        
+        // Summary block
+        renderSummary(data);
         
         document.getElementById('progressBar').classList.remove('active');
         document.getElementById('results').classList.add('active');
@@ -271,15 +409,45 @@ async function loadAIAnalysis(phrase, region) {
             html += '<div class="ai-summary">' + data.ai_summary + '</div>';
         }
         
-        // Scenarios
+        // Suitable for
+        if (data.ai_suitable_for && data.ai_suitable_for.length > 0) {
+            html += '<div class="ai-section">';
+            html += '<div class="ai-section-title">✅ Подходит для</div>';
+            html += '<div class="ai-tags">';
+            data.ai_suitable_for.forEach(function(s) {
+                html += '<span class="ai-tag green">' + s + '</span>';
+            });
+            html += '</div></div>';
+        }
+        
+        // Not suitable for
+        if (data.ai_not_suitable_for && data.ai_not_suitable_for.length > 0) {
+            html += '<div class="ai-section">';
+            html += '<div class="ai-section-title">❌ Не подходит для</div>';
+            html += '<div class="ai-tags">';
+            data.ai_not_suitable_for.forEach(function(s) {
+                html += '<span class="ai-tag red">' + s + '</span>';
+            });
+            html += '</div></div>';
+        }
+        
+        // Scenarios v2
         if (data.ai_scenarios && data.ai_scenarios.length > 0) {
             html += '<div class="ai-section">';
             html += '<div class="ai-section-title">🎯 Сценарии входа</div>';
-            html += '<ul class="ai-list">';
             data.ai_scenarios.forEach(function(s, i) {
-                html += '<li><span class="icon">' + (i+1) + '.</span><span class="text">' + s + '</span></li>';
+                if (typeof s === 'object') {
+                    html += '<div class="scenario-card">';
+                    html += '<div class="scenario-name">' + (i+1) + '. ' + (s.name || '') + '</div>';
+                    if (s.cluster) html += '<div class="scenario-cluster">📊 Кластер: ' + s.cluster + '</div>';
+                    if (s.logic) html += '<div class="scenario-logic">' + s.logic + '</div>';
+                    if (s.risk) html += '<div class="scenario-risk">⚠️ ' + s.risk + '</div>';
+                    html += '</div>';
+                } else {
+                    html += '<div class="scenario-card"><div class="scenario-name">' + (i+1) + '. ' + s + '</div></div>';
+                }
             });
-            html += '</ul></div>';
+            html += '</div>';
         }
         
         // Risks
@@ -371,6 +539,42 @@ function renderClusterList(clusters) {
 }
 
 function toggleCluster(i) { document.getElementById('cluster-' + i).classList.toggle('open'); }
+
+function renderSummary(data) {
+    var card = document.getElementById('summaryCard');
+    card.style.display = 'block';
+    
+    // Size
+    if (data.size) {
+        document.getElementById('sumSize').innerHTML = data.size.size_icon + ' ' + Math.round(data.size.size_index) + '/100';
+    }
+    
+    // Competition
+    if (data.competition) {
+        document.getElementById('sumComp').innerHTML = data.competition.competition_icon + ' ' + Math.round(data.competition.competition_index) + '/100';
+    }
+    
+    // Season
+    if (data.seasonality) {
+        var coef = data.seasonality.coefficient;
+        var icon = coef < 0.8 ? '📉' : coef > 1.2 ? '📈' : '➡️';
+        document.getElementById('sumSeason').innerHTML = icon + ' ×' + coef.toFixed(2);
+    }
+    
+    // Top directions
+    if (data.clusters && data.clusters.length > 0) {
+        var html = '';
+        data.clusters.slice(0, 3).forEach(function(c) {
+            html += '<span class="summary-direction-tag">' + c.name + ' (' + c.share + '%)</span>';
+        });
+        document.getElementById('sumDirections').innerHTML = html;
+    }
+    
+    // Verdict
+    if (data.verdict) {
+        document.getElementById('sumVerdict').innerHTML = data.verdict.verdict_icon + ' ' + data.verdict.verdict_label;
+    }
+}
 </script>
 </body>
 </html>'''

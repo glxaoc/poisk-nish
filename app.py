@@ -582,32 +582,60 @@ def api_analyze():
 
 @app.route('/api/ai-analyze')
 def api_ai_analyze():
-    """ИИ-анализ ниши"""
-    from database import get_all_queries
-    from clusterer import clusterize
-    from analyzer import analyze_niche
+    """ИИ-анализ ниши v2.0"""
+    from analyzer_v2 import analyze_niche_v2
     from ai_analyzer import generate_ai_analysis
     
     region = request.args.get("region", 225, type=int)
     phrase = request.args.get("phrase", "")
     
-    queries = get_all_queries(region)
-    if not queries:
-        return jsonify({"error": "No data"})
+    # Получаем данные v2
+    data = analyze_niche_v2(phrase, region)
+    if "error" in data:
+        return jsonify({"error": data["error"]})
     
-    clusters = clusterize(queries, phrase)
-    analysis = analyze_niche(queries, clusters, phrase)
+    # Формируем метрики для ИИ
+    metrics_for_ai = {
+        "total_count": data.get("total_count", 0),
+        "size_index": data.get("size", {}).get("size_index", 50),
+        "competition_index": data.get("competition", {}).get("competition_index", 50),
+        "season_coef": data.get("seasonality", {}).get("coefficient", 1.0),
+        "brand_share": data.get("competition", {}).get("factors", {}).get("brand_share", 0),
+        "found_brands": data.get("competition", {}).get("factors", {}).get("found_brands", []),
+        "verdict": data.get("verdict", {}).get("verdict", "conditional"),
+        "geo_share": data.get("metrics", {}).get("geo_share", 0),
+        "mp_share": data.get("metrics", {}).get("mp_share", 0),
+    }
     
     # Генерируем ИИ-анализ
-    ai_result = generate_ai_analysis(phrase, analysis["metrics"], clusters["clusters"])
+    ai_result = generate_ai_analysis(phrase, metrics_for_ai, data.get("clusters", []))
     
     return jsonify({
         "phrase": phrase,
         "ai_summary": ai_result.get("summary", ""),
         "ai_scenarios": ai_result.get("scenarios", []),
+        "ai_suitable_for": ai_result.get("suitable_for", []),
+        "ai_not_suitable_for": ai_result.get("not_suitable_for", []),
         "ai_risks": ai_result.get("risks", []),
         "_tokens": ai_result.get("_tokens", 0)
     })
+
+
+
+@app.route('/api/analyze-v2')
+def api_analyze_v2():
+    """Полный анализ ниши v2.0 с новыми метриками"""
+    from analyzer_v2 import analyze_niche_v2
+    
+    region = request.args.get("region", 225, type=int)
+    phrase = request.args.get("phrase", "")
+    
+    result = analyze_niche_v2(phrase, region)
+    
+    if "error" in result:
+        return jsonify(result), 400
+    
+    return jsonify(result)
 
 
 if __name__ == '__main__':
