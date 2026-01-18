@@ -594,17 +594,19 @@ def api_ai_analyze():
     if "error" in data:
         return jsonify({"error": data["error"]})
     
-    # Формируем метрики для ИИ
+    # Формируем метрики для ИИ (v3 — на основе YoY)
+    seasonality = data.get("seasonality", {})
     metrics_for_ai = {
-        "total_count": data.get("total_count", 0),
-        "size_index": data.get("size", {}).get("size_index", 50),
-        "competition_index": data.get("competition", {}).get("competition_index", 50),
-        "season_coef": data.get("seasonality", {}).get("coefficient", 1.0),
-        "brand_share": data.get("competition", {}).get("factors", {}).get("brand_share", 0),
-        "found_brands": data.get("competition", {}).get("factors", {}).get("found_brands", []),
+        # Главные метрики YoY
+        "now_count": seasonality.get("now_count", 0),
+        "year_ago_count": seasonality.get("year_ago_count", 0),
+        "yoy_percent": seasonality.get("yoy_percent", 0),
+        "current_month_label": seasonality.get("current_month_label", ""),
+        "year_ago_month_label": seasonality.get("year_ago_month_label", ""),
+        
+        # Вердикт
         "verdict": data.get("verdict", {}).get("verdict", "conditional"),
-        "geo_share": data.get("metrics", {}).get("geo_share", 0),
-        "mp_share": data.get("metrics", {}).get("mp_share", 0),
+        "verdict_label": data.get("verdict", {}).get("verdict_label", ""),
     }
     
     # Генерируем ИИ-анализ

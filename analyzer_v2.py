@@ -60,11 +60,10 @@ def analyze_niche_v2(phrase: str, region: int = 225) -> Dict:
         queries, clusters, mp_share=mp_share, geo_share=geo_share
     )
     
-    # 7. Предварительный вердикт
-    verdict = calc.determine_verdict(
-        size_metrics['size_index'],
-        comp_metrics['competition_index'],
-        len(queries)
+    # 7. Вердикт v3 (на основе NOW + YoY)
+    verdict = calc.determine_verdict_v3(
+        season_details.get('now_count', 0),
+        season_details.get('yoy_percent', 0)
     )
     
     # 8. Формируем инсайты
@@ -85,12 +84,25 @@ def analyze_niche_v2(phrase: str, region: int = 225) -> Dict:
         "competition": comp_metrics,
         "seasonality": {
             "coefficient": season_coef,
-            "current_month": season_details.get('current_month', 0),
-            "average_month": season_details.get('average_month', 0),
             "trend": season_details.get('trend', 'unknown'),
+            
+            # YoY данные
+            "now_count": season_details.get('now_count', 0),
+            "year_ago_count": season_details.get('year_ago_count', 0),
+            "yoy_percent": season_details.get('yoy_percent', 0),
+            "current_month_label": season_details.get('current_month_label', ''),
+            "year_ago_month_label": season_details.get('year_ago_month_label', ''),
+            
+            # График
+            "monthly_series": season_details.get('monthly_series', []),
+            "monthly_labels": season_details.get('monthly_labels', []),
+            
+            # Совместимость
+            "average_month": season_details.get('average_month', 0),
             "peak_month": season_details.get('peak_month', ''),
             "dynamics": season_details.get('dynamics', []),
-            "yearly_growth": season_details.get('yearly_growth', 0)
+            "yearly_growth": season_details.get('yoy_percent', 0),
+            "current_month": season_details.get('now_count', 0)
         },
         "region_info": region_details,
         

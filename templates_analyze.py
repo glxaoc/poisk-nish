@@ -1,5 +1,5 @@
 """
-HTML шаблон страницы анализа ниши v3 - с ИИ
+HTML шаблон страницы анализа ниши v3.0 — YoY-центричный UI
 """
 
 ANALYZE_HTML = r'''<!DOCTYPE html>
@@ -34,19 +34,67 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .results{display:none}
 .results.active{display:block}
 
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-bottom:20px}
-.stat-card{background:white;border-radius:12px;padding:20px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
-.stat-value{font-size:1.8em;font-weight:700;color:#667eea}
-.stat-label{color:#666;margin-top:5px;font-size:13px}
+/* Verdict block */
+.verdict-card{border-radius:16px;padding:25px;margin-bottom:20px;text-align:center}
+.verdict-card.recommended{background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%);color:white}
+.verdict-card.conditional{background:linear-gradient(135deg,#eab308 0%,#ca8a04 100%);color:white}
+.verdict-card.not_recommended{background:linear-gradient(135deg,#ef4444 0%,#dc2626 100%);color:white}
+.verdict-card.uncertain{background:linear-gradient(135deg,#6b7280 0%,#4b5563 100%);color:white}
+.verdict-icon{font-size:3em;margin-bottom:10px}
+.verdict-label{font-size:1.5em;font-weight:700;margin-bottom:10px}
+.verdict-reason{font-size:14px;opacity:0.9}
 
+/* YoY metrics row */
+.yoy-row{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px}
+@media(max-width:700px){.yoy-row{grid-template-columns:1fr}}
+.yoy-card{background:white;border-radius:12px;padding:20px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
+.yoy-value{font-size:28px;font-weight:700;color:#333}
+.yoy-value.positive{color:#22c55e}
+.yoy-value.negative{color:#ef4444}
+.yoy-label{color:#888;font-size:13px;margin-top:6px}
+.yoy-month{font-size:12px;color:#aaa;margin-top:4px}
+
+/* Dynamics chart */
+.dynamics-card{background:white;border-radius:12px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.05);margin-bottom:20px}
+.dynamics-card h3{margin-bottom:15px;color:#333;font-size:1em}
+.dynamics-chart{height:200px}
+.yoy-hint{font-size:12px;color:#888;margin-top:10px;text-align:center}
+
+/* AI Block */
+.ai-card{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);border-radius:16px;padding:30px;color:white;margin-bottom:20px}
+.ai-card h3{color:#fff;margin-bottom:20px;font-size:1.3em}
+.ai-summary{font-size:16px;line-height:1.7;margin-bottom:25px;color:#e0e0e0}
+.ai-section{margin-bottom:20px}
+.ai-section-title{font-weight:600;margin-bottom:12px;color:#a0a0ff;font-size:14px;text-transform:uppercase;letter-spacing:1px}
+.ai-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.ai-tag{padding:6px 12px;border-radius:20px;font-size:13px;font-weight:500}
+.ai-tag.green{background:#dcfce7;color:#166534}
+.ai-tag.red{background:#fee2e2;color:#991b1b}
+.ai-loading{text-align:center;padding:40px;color:#888}
+.ai-loading .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#667eea;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scenario-card{background:#f8fafc;border-radius:12px;padding:15px;margin:10px 0;border-left:4px solid #667eea}
+.scenario-name{font-weight:600;font-size:15px;color:#1e293b;margin-bottom:8px}
+.scenario-action{font-size:14px;color:#475569;margin-bottom:6px}
+.scenario-risk{font-size:13px;color:#dc2626;background:#fef2f2;padding:6px 10px;border-radius:6px;margin-top:8px}
+
+/* Details section */
+.details-section{margin-top:30px;padding-top:20px;border-top:2px solid #e5e7eb}
+.details-title{font-size:14px;color:#666;margin-bottom:15px;text-transform:uppercase;letter-spacing:1px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
 @media(max-width:900px){.grid-2{grid-template-columns:1fr}}
-
-.card{background:white;border-radius:12px;padding:25px;box-shadow:0 2px 10px rgba(0,0,0,0.05);margin-bottom:20px}
+.card{background:white;border-radius:12px;padding:25px;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
 .card h3{margin-bottom:15px;color:#333;font-size:1.1em;display:flex;align-items:center;gap:10px}
+.chart-container{position:relative;height:250px}
 
-.chart-container{position:relative;height:280px}
+/* Extra metrics */
+.extra-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px}
+@media(max-width:800px){.extra-metrics{grid-template-columns:repeat(2,1fr)}}
+.extra-card{background:white;border-radius:10px;padding:15px;text-align:center}
+.extra-value{font-size:20px;font-weight:700;color:#667eea}
+.extra-label{font-size:11px;color:#888;margin-top:4px}
 
+/* Clusters */
 .cluster-list{max-height:350px;overflow-y:auto}
 .cluster-item{border:1px solid #eee;border-radius:10px;margin-bottom:8px;overflow:hidden}
 .cluster-header{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;cursor:pointer;background:#fafafa}
@@ -61,73 +109,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .phrase-item:last-child{border-bottom:none}
 .phrase-text{color:#555}
 .phrase-count{color:#667eea;font-weight:500}
-
-/* Insights */
-.insights-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;margin-bottom:20px}
-.insight-card{background:white;border-radius:12px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.05);border-left:4px solid #667eea}
-.insight-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.insight-icon{font-size:1.5em}
-.insight-title{font-weight:600;color:#333}
-.insight-text{color:#666;font-size:14px;line-height:1.5}
-
-/* AI Block */
-.ai-card{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);border-radius:16px;padding:30px;color:white;margin-bottom:20px}
-.ai-card h3{color:#fff;margin-bottom:20px;font-size:1.3em}
-.ai-summary{font-size:16px;line-height:1.7;margin-bottom:25px;color:#e0e0e0}
-.ai-section{margin-bottom:20px}
-.ai-section-title{font-weight:600;margin-bottom:12px;color:#a0a0ff;font-size:14px;text-transform:uppercase;letter-spacing:1px}
-.ai-list{list-style:none}
-.ai-list li{padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;gap:12px;align-items:flex-start}
-.ai-list li:last-child{border-bottom:none}
-.ai-list .icon{font-size:1.2em}
-.ai-list .text{color:#d0d0d0;font-size:14px;line-height:1.5}
-.ai-loading{text-align:center;padding:40px;color:#888}
-.ai-loading .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#667eea;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* Recommendations */
-.recs-card{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:12px;padding:25px;color:white;margin-bottom:20px}
-.recs-card h3{color:white;margin-bottom:15px}
-.rec-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.2)}
-.rec-item:last-child{border-bottom:none}
-.rec-icon{font-size:1.3em}
-.rec-text{font-size:14px;line-height:1.5}
-/* Progress bars for metrics */
-.metric-bar{background:#e0e0e0;border-radius:10px;height:8px;overflow:hidden;margin-top:8px}
-.metric-bar-fill{height:100%;border-radius:10px;transition:width 0.5s ease}
-.metric-bar-fill.size{background:linear-gradient(90deg,#667eea,#764ba2)}
-.metric-bar-fill.competition{background:linear-gradient(90deg,#22c55e,#eab308,#ef4444)}
-.metric-index{font-size:24px;font-weight:700;color:#333}
-.metric-label{font-size:12px;color:#888;margin-top:4px}
-/* Verdict block */
-.verdict-card{border-radius:16px;padding:25px;margin-bottom:20px;text-align:center}
-.verdict-card.recommended{background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%);color:white}
-.verdict-card.conditional{background:linear-gradient(135deg,#eab308 0%,#ca8a04 100%);color:white}
-.verdict-card.not_recommended{background:linear-gradient(135deg,#ef4444 0%,#dc2626 100%);color:white}
-.verdict-card.uncertain{background:linear-gradient(135deg,#6b7280 0%,#4b5563 100%);color:white}
-.verdict-icon{font-size:3em;margin-bottom:10px}
-.verdict-label{font-size:1.5em;font-weight:700;margin-bottom:10px}
-.verdict-reason{font-size:14px;opacity:0.9}
-/* AI v2 styles */
-.ai-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.ai-tag{padding:6px 12px;border-radius:20px;font-size:13px;font-weight:500}
-.ai-tag.green{background:#dcfce7;color:#166534}
-.ai-tag.red{background:#fee2e2;color:#991b1b}
-.scenario-card{background:#f8fafc;border-radius:12px;padding:15px;margin:10px 0;border-left:4px solid #667eea}
-.scenario-name{font-weight:600;font-size:15px;color:#1e293b;margin-bottom:8px}
-.scenario-action{font-size:14px;color:#475569;margin-bottom:6px}
-.scenario-risk{font-size:13px;color:#dc2626;background:#fef2f2;padding:6px 10px;border-radius:6px;margin-top:8px}
-/* Summary block */
-.summary-card{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);border-radius:16px;padding:25px;color:white;margin-top:20px}
-.summary-card h3{margin-bottom:20px;font-size:1.3em}
-.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px}
-.summary-item{background:rgba(255,255,255,0.1);border-radius:12px;padding:15px;text-align:center}
-.summary-label{font-size:12px;color:#94a3b8;margin-bottom:5px}
-.summary-value{font-size:18px;font-weight:700}
-.summary-directions{margin-bottom:15px}
-.summary-directions .summary-label{margin-bottom:10px}
-.summary-direction-tag{display:inline-block;background:rgba(102,126,234,0.3);color:#a5b4fc;padding:6px 12px;border-radius:20px;margin:4px;font-size:13px}
-.summary-verdict{background:rgba(255,255,255,0.1);border-radius:12px;padding:15px;text-align:center;font-size:16px;font-weight:600}
 </style>
 </head>
 <body>
@@ -168,30 +149,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="verdict-reason" id="verdictReason"></div>
 </div>
 
-<!-- 4 ключевых метрики -->
-<div class="stats-row">
-<div class="stat-card">
-<div class="metric-index" id="sizeIndex">0</div>
-<div class="metric-label">Размер ниши</div>
-<div class="metric-bar"><div class="metric-bar-fill size" id="sizeBar" style="width:0%"></div></div>
-<div style="font-size:12px;color:#666;margin-top:5px" id="sizeLabel"></div>
+<!-- YoY metrics: NOW / YEAR_AGO / YoY -->
+<div class="yoy-row">
+<div class="yoy-card">
+<div class="yoy-value" id="nowValue">—</div>
+<div class="yoy-label">Сейчас</div>
+<div class="yoy-month" id="nowMonth"></div>
 </div>
-<div class="stat-card">
-<div class="metric-index" id="compIndex">0</div>
-<div class="metric-label">Конкуренция</div>
-<div class="metric-bar"><div class="metric-bar-fill competition" id="compBar" style="width:0%"></div></div>
-<div style="font-size:12px;color:#666;margin-top:5px" id="compLabel"></div>
+<div class="yoy-card">
+<div class="yoy-value" id="yearAgoValue">—</div>
+<div class="yoy-label">Год назад</div>
+<div class="yoy-month" id="yearAgoMonth"></div>
 </div>
-<div class="stat-card">
-<div class="metric-index" id="seasonIndex">×1.0</div>
-<div class="metric-label">Сезонность</div>
-<div style="font-size:12px;color:#666;margin-top:8px" id="seasonLabel"></div>
+<div class="yoy-card">
+<div class="yoy-value" id="yoyValue">—</div>
+<div class="yoy-label">Изменение YoY</div>
+<div class="yoy-month">год к году</div>
 </div>
-<div class="stat-card">
-<div class="metric-index" id="growthIndex" style="color:#22c55e">+0%</div>
-<div class="metric-label">Рост за год</div>
-<div style="font-size:12px;color:#666;margin-top:8px" id="growthLabel"></div>
 </div>
+
+<!-- Dynamics chart -->
+<div class="dynamics-card">
+<h3>📈 Динамика за 12 месяцев</h3>
+<div class="dynamics-chart">
+<canvas id="dynamicsChart"></canvas>
+</div>
+<div class="yoy-hint">YoY = сравнение одного календарного месяца с тем же месяцем год назад</div>
 </div>
 
 <!-- AI Analysis Block -->
@@ -205,12 +188,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 </div>
 
+<!-- Details Section -->
+<div class="details-section">
+<div class="details-title">📊 Детали анализа</div>
 
+<!-- Extra metrics -->
+<div class="extra-metrics">
+<div class="extra-card">
+<div class="extra-value" id="sizeIndex">—</div>
+<div class="extra-label">Размер ниши</div>
+</div>
+<div class="extra-card">
+<div class="extra-value" id="compIndex">—</div>
+<div class="extra-label">Конкуренция</div>
+</div>
+<div class="extra-card">
+<div class="extra-value" id="seasonCoef">—</div>
+<div class="extra-label">Сезонность</div>
+</div>
+<div class="extra-card">
+<div class="extra-value" id="totalQueries">—</div>
+<div class="extra-label">Запросов</div>
+</div>
+</div>
 
 <div class="grid-2">
 <div class="card">
-<h3>📊 Структура спроса</h3>
-<div id="chartHint" style="font-size:13px;color:#666;margin-bottom:10px;padding:8px;background:#f8fafc;border-radius:8px"></div>
+<h3>🎯 Структура спроса</h3>
 <div class="chart-container">
 <canvas id="pieChart"></canvas>
 </div>
@@ -221,16 +225,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 </div>
 
-
+</div>
 
 </div>
 </div>
 
 <script>
 var pieChart = null;
+var dynamicsChart = null;
 var pollInterval = null;
 
 function fmt(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+
+function formatMonth(label) {
+    var months = {'01':'янв','02':'фев','03':'мар','04':'апр','05':'май','06':'июн','07':'июл','08':'авг','09':'сен','10':'окт','11':'ноя','12':'дек'};
+    var parts = label.split('-');
+    return months[parts[1]] + ' ' + parts[0];
+}
 
 async function startAnalysis() {
     var phrase = document.getElementById('phrase').value.trim();
@@ -273,11 +284,6 @@ async function loadResults() {
         var resp = await fetch('/api/analyze-v2?phrase=' + encodeURIComponent(phrase) + '&region=' + region);
         var data = await resp.json();
         
-        // Stats
-        document.getElementById('statTotal').textContent = fmt(data.total_count);
-        document.getElementById('statQueries').textContent = fmt(data.total_queries);
-        document.getElementById('statClusters').textContent = data.clusters_count;
-        
         // Verdict
         if (data.verdict) {
             var vc = document.getElementById('verdictCard');
@@ -288,80 +294,49 @@ async function loadResults() {
             document.getElementById('verdictReason').textContent = data.verdict.reason;
         }
         
-        // Size metric
-        if (data.size) {
-            document.getElementById('sizeIndex').textContent = Math.round(data.size.size_index);
-            document.getElementById('sizeBar').style.width = data.size.size_index + '%';
-            var sizeKey = data.size.size_key;
-            var sizeHint = {
-                'micro': 'узкая аудитория',
-                'small': 'для теста идеи',
-                'medium': 'хороший потенциал',
-                'large': 'большой рынок',
-                'huge': 'массовый спрос'
-            };
-            document.getElementById('sizeLabel').innerHTML = data.size.size_icon + ' ' + (sizeHint[sizeKey] || data.size.size_label);
-        }
-        
-        // Competition metric
-        if (data.competition) {
-            document.getElementById('compIndex').textContent = Math.round(data.competition.competition_index);
-            document.getElementById('compBar').style.width = data.competition.competition_index + '%';
-            var compKey = data.competition.competition_key;
-            var compHint = {
-                'low': 'можно заходить без бренда',
-                'medium': 'нужна стратегия',
-                'high': 'дорогой вход',
-                'very_high': 'только для крупных игроков'
-            };
-            document.getElementById('compLabel').innerHTML = data.competition.competition_icon + ' ' + (compHint[compKey] || data.competition.competition_label);
-        }
-        
-        // Seasonality
+        // YoY metrics
         if (data.seasonality) {
-            var coef = data.seasonality.coefficient;
-            document.getElementById('seasonIndex').textContent = '×' + coef.toFixed(2);
-            var trend = data.seasonality.trend;
-            var trendIcon = trend === 'growing' ? '📈' : trend === 'declining' ? '📉' : '➡️';
-            document.getElementById('seasonLabel').innerHTML = trendIcon + ' ' + (coef < 0.8 ? 'низкий сезон' : coef > 1.2 ? 'высокий сезон' : 'норма');
+            var s = data.seasonality;
             
-            // Yearly growth
-            var growth = data.seasonality.yearly_growth || 0;
-            var growthEl = document.getElementById('growthIndex');
-            var growthLabel = document.getElementById('growthLabel');
-            var prefix = growth >= 0 ? '+' : '';
-            growthEl.textContent = prefix + growth.toFixed(0) + '%';
-            growthEl.style.color = growth >= 0 ? '#22c55e' : '#ef4444';
-            if (growth > 50) {
-                growthLabel.innerHTML = '🚀 быстрый рост';
-            } else if (growth > 10) {
-                growthLabel.innerHTML = '📈 растёт';
-            } else if (growth > -10) {
-                growthLabel.innerHTML = '➡️ стабильно';
-            } else {
-                growthLabel.innerHTML = '📉 падает';
+            // NOW
+            document.getElementById('nowValue').textContent = fmt(s.now_count || 0);
+            document.getElementById('nowMonth').textContent = s.current_month_label ? formatMonth(s.current_month_label) : '';
+            
+            // YEAR_AGO
+            document.getElementById('yearAgoValue').textContent = fmt(s.year_ago_count || 0);
+            document.getElementById('yearAgoMonth').textContent = s.year_ago_month_label ? formatMonth(s.year_ago_month_label) : '';
+            
+            // YoY
+            var yoy = s.yoy_percent || 0;
+            var yoyEl = document.getElementById('yoyValue');
+            var prefix = yoy >= 0 ? '+' : '';
+            yoyEl.textContent = prefix + yoy.toFixed(0) + '%';
+            yoyEl.classList.remove('positive', 'negative');
+            yoyEl.classList.add(yoy >= 0 ? 'positive' : 'negative');
+            
+            // Dynamics chart
+            if (s.monthly_labels && s.monthly_series) {
+                renderDynamicsChart(s.monthly_labels, s.monthly_series);
             }
+            
+            // Season coef
+            document.getElementById('seasonCoef').textContent = '×' + (s.coefficient || 1).toFixed(2);
         }
         
-        // Insights
-        renderInsights(data.insights);
-        
-        // Recommendations
-        renderRecs(data.recommendations);
-        
-        // Chart hint
-        if (data.clusters && data.clusters.length > 0) {
-            var top = data.clusters[0];
-            document.getElementById('chartHint').textContent = 'Основной спрос: ' + top.name + ' (' + top.share + '%)';
+        // Extra metrics
+        if (data.size) {
+            document.getElementById('sizeIndex').textContent = Math.round(data.size.size_index) + '/100';
         }
+        if (data.competition) {
+            document.getElementById('compIndex').textContent = Math.round(data.competition.competition_index) + '/100';
+        }
+        document.getElementById('totalQueries').textContent = fmt(data.total_queries || 0);
         
-        // Chart
-        renderPieChart(data.clusters);
-        
-        // Clusters
-        renderClusterList(data.clusters);
-        
-
+        // Pie chart
+        if (data.clusters) {
+            renderPieChart(data.clusters);
+            renderClusterList(data.clusters);
+        }
         
         document.getElementById('progressBar').classList.remove('active');
         document.getElementById('results').classList.add('active');
@@ -371,6 +346,50 @@ async function loadResults() {
         
     } catch(e) { alert('Ошибка: ' + e); }
     resetUI();
+}
+
+function renderDynamicsChart(labels, values) {
+    var ctx = document.getElementById('dynamicsChart').getContext('2d');
+    if (dynamicsChart) dynamicsChart.destroy();
+    
+    var formattedLabels = labels.map(formatMonth);
+    
+    dynamicsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: formattedLabels,
+            datasets: [{
+                label: 'Запросов',
+                data: values,
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102,126,234,0.1)',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 4,
+                pointBackgroundColor: '#667eea'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) { return fmt(ctx.raw) + ' запросов'; }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(v) { return v >= 1000 ? (v/1000) + 'k' : v; }
+                    }
+                }
+            }
+        }
+    });
 }
 
 async function loadAIAnalysis(phrase, region) {
@@ -409,11 +428,11 @@ async function loadAIAnalysis(phrase, region) {
             html += '</div></div>';
         }
         
-        // Scenarios v2.1 — компактный формат
+        // Scenarios
         if (data.ai_scenarios && data.ai_scenarios.length > 0) {
             html += '<div class="ai-section">';
             html += '<div class="ai-section-title">🎯 Как заходить</div>';
-            data.ai_scenarios.slice(0, 2).forEach(function(s, i) {
+            data.ai_scenarios.slice(0, 2).forEach(function(s) {
                 if (typeof s === 'object') {
                     html += '<div class="scenario-card">';
                     html += '<div class="scenario-name">' + (s.name || '') + '</div>';
@@ -425,17 +444,6 @@ async function loadAIAnalysis(phrase, region) {
                 }
             });
             html += '</div>';
-        }
-        
-        // Risks
-        if (data.ai_risks && data.ai_risks.length > 0) {
-            html += '<div class="ai-section">';
-            html += '<div class="ai-section-title">⚠️ Риски</div>';
-            html += '<ul class="ai-list">';
-            data.ai_risks.forEach(function(r) {
-                html += '<li><span class="icon">•</span><span class="text">' + r + '</span></li>';
-            });
-            html += '</ul></div>';
         }
         
         document.getElementById('aiContent').innerHTML = html || '<div style="color:#888">Не удалось получить анализ</div>';
@@ -452,38 +460,13 @@ function updateProgress(pct, text) {
 
 function resetUI() { document.getElementById('btnAnalyze').disabled = false; }
 
-function renderInsights(insights) {
-    var html = '';
-    insights.forEach(function(ins) {
-        html += '<div class="insight-card">';
-        html += '<div class="insight-header"><span class="insight-icon">' + ins.icon + '</span>';
-        html += '<span class="insight-title">' + ins.title + '</span></div>';
-        html += '<div class="insight-text">' + ins.text + '</div></div>';
-    });
-    document.getElementById('insightsGrid').innerHTML = html;
-}
-
-function renderRecs(recs) {
-    if (!recs || recs.length === 0) {
-        document.getElementById('recsCard').style.display = 'none';
-        return;
-    }
-    var html = '';
-    recs.forEach(function(r) {
-        html += '<div class="rec-item"><span class="rec-icon">' + r.icon + '</span>';
-        html += '<span class="rec-text">' + r.text + '</span></div>';
-    });
-    document.getElementById('recsList').innerHTML = html;
-    document.getElementById('recsCard').style.display = 'block';
-}
-
 function renderPieChart(clusters) {
     var ctx = document.getElementById('pieChart').getContext('2d');
     if (pieChart) pieChart.destroy();
     
     var colors = ['#667eea','#764ba2','#f093fb','#f5576c','#4facfe','#00f2fe','#43e97b','#38f9d7','#fa709a','#fee140'];
-    var top = clusters.slice(0, 8);
-    var other = clusters.slice(8);
+    var top = clusters.slice(0, 6);
+    var other = clusters.slice(6);
     var otherSum = other.reduce((a,c) => a + c.count, 0);
     
     var labels = top.map(c => c.name);
@@ -507,10 +490,12 @@ function renderClusterList(clusters) {
         html += '<div class="cluster-stats"><span class="cluster-count">' + fmt(c.count) + '</span>';
         html += '<span class="cluster-share">' + c.share + '%</span></div></div>';
         html += '<div class="cluster-phrases" id="cluster-' + i + '">';
-        c.phrases.forEach(function(p) {
-            html += '<div class="phrase-item"><span class="phrase-text">' + p.phrase + '</span>';
-            html += '<span class="phrase-count">' + fmt(p.count) + '</span></div>';
-        });
+        if (c.phrases) {
+            c.phrases.forEach(function(p) {
+                html += '<div class="phrase-item"><span class="phrase-text">' + p.phrase + '</span>';
+                html += '<span class="phrase-count">' + fmt(p.count) + '</span></div>';
+            });
+        }
         html += '</div></div>';
     });
     document.getElementById('clusterList').innerHTML = html;
@@ -518,41 +503,6 @@ function renderClusterList(clusters) {
 
 function toggleCluster(i) { document.getElementById('cluster-' + i).classList.toggle('open'); }
 
-function renderSummary(data) {
-    var card = document.getElementById('summaryCard');
-    card.style.display = 'block';
-    
-    // Size
-    if (data.size) {
-        document.getElementById('sumSize').innerHTML = data.size.size_icon + ' ' + Math.round(data.size.size_index) + '/100';
-    }
-    
-    // Competition
-    if (data.competition) {
-        document.getElementById('sumComp').innerHTML = data.competition.competition_icon + ' ' + Math.round(data.competition.competition_index) + '/100';
-    }
-    
-    // Season
-    if (data.seasonality) {
-        var coef = data.seasonality.coefficient;
-        var icon = coef < 0.8 ? '📉' : coef > 1.2 ? '📈' : '➡️';
-        document.getElementById('sumSeason').innerHTML = icon + ' ×' + coef.toFixed(2);
-    }
-    
-    // Top directions
-    if (data.clusters && data.clusters.length > 0) {
-        var html = '';
-        data.clusters.slice(0, 3).forEach(function(c) {
-            html += '<span class="summary-direction-tag">' + c.name + ' (' + c.share + '%)</span>';
-        });
-        document.getElementById('sumDirections').innerHTML = html;
-    }
-    
-    // Verdict
-    if (data.verdict) {
-        document.getElementById('sumVerdict').innerHTML = data.verdict.verdict_icon + ' ' + data.verdict.verdict_label;
-    }
-}
 </script>
 </body>
 </html>'''

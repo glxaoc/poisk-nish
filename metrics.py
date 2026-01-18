@@ -9,7 +9,7 @@ from wordstat_client import WordstatClient
 from config import (
     SIZE_THRESHOLDS, SIZE_LABELS, SIZE_INDEX_MAX,
     COMPETITION_WEIGHTS, COMPETITION_THRESHOLDS, COMPETITION_LABELS,
-    BRAND_PATTERNS, VERDICT_LABELS, VERDICT_RULES
+    BRAND_PATTERNS, VERDICT_LABELS, VERDICT_RULES, VERDICT_V3_THRESHOLDS
 )
 
 
@@ -95,28 +95,40 @@ class MetricsCalculator:
     
     def get_seasonality_coefficient(self, phrase: str, region_id: int = 225) -> Tuple[float, Dict]:
         """
-        Рассчитывает сезонный коэффициент.
+        Рассчитывает сезонность и YoY (год к году).
         
-        Коэффициент = текущий месяц / среднее за год
-        >1 = сейчас спрос выше среднего (хорошее время)
-        <1 = сейчас спрос ниже среднего
+        YoY = тот же календарный месяц год назад
+        Пример: декабрь 2025 / декабрь 2024
         
         Returns:
-            (coefficient, details)
+            (coefficient, details) где details содержит:
+            - now_count: частотность текущего месяца
+            - year_ago_count: частотность того же месяца год назад
+            - yoy_percent: изменение год к году в %
+            - current_month_label: "2025-12"
+            - year_ago_month_label: "2024-12"
+            - monthly_series: массив 12 значений для графика
+            - monthly_labels: массив 12 меток YYYY-MM
         """
         try:
-            # Период: последние 12 месяцев
             now = datetime.now()
             
-            # to_date = последний день прошлого месяца
-            to_dt = now.replace(day=1) - timedelta(days=1)
-            to_date = to_dt.strftime("%Y-%m-%d")
+            # CURRENT_MONTH = последний завершённый календарный месяц
+            # Если сегодня 18.01.2026, то текущий = декабрь 2025
+            current_month_dt = (now.replace(day=1) - timedelta(days=1)).replace(day=1)
             
-            # from_date = первый день 12 месяцев назад
-            from_dt = to_dt.replace(day=1)
-            for _ in range(11):
-                from_dt = (from_dt - timedelta(days=1)).replace(day=1)
+            # YEAR_AGO = тот же месяц год назад
+            year_ago_dt = current_month_dt.replace(year=current_month_dt.year - 1)
+            
+            # Запрашиваем 13 месяцев чтобы иметь NOW и YEAR_AGO
+            # from_date = год назад минус 1 месяц (для запаса)
+            from_dt = year_ago_dt
             from_date = from_dt.strftime("%Y-%m-%d")
+            
+            # to_date = последний день текущего месяца
+            to_dt = current_month_dt + timedelta(days=32)
+            to_dt = to_dt.replace(day=1) - timedelta(days=1)
+            to_date = to_dt.strftime("%Y-%m-%d")
             
             result = self.client.get_dynamics(
                 phrase,
@@ -131,47 +143,99 @@ class MetricsCalculator:
             if not dynamics:
                 return 1.0, {"error": "no_data"}
             
-            counts = [d.get('count', 0) for d in dynamics]
-            average = sum(counts) / len(counts) if counts else 1
-            current = counts[-1] if counts else 0
+            # Строим словарь месяц -> count
+            month_data = {}
+            for d in dynamics:
+                date_str = d.get('date', '')[:7]  # "2025-12"
+                month_data[date_str] = d.get('count', 0)
+            
+            # Определяем NOW и YEAR_AGO
+            current_label = current_month_dt.strftime("%Y-%m")
+            year_ago_label = year_ago_dt.strftime("%Y-%m")
+            
+            now_count = month_data.get(current_label, 0)
+            year_ago_count = month_data.get(year_ago_label, 0)
+            
+            # YoY в процентах
+            if year_ago_count > 0:
+                yoy_percent = round(((now_count / year_ago_count) - 1) * 100, 1)
+            else:
+                yoy_percent = 0.0
+            
+            # Сезонный коэффициент (текущий / среднее за 12 месяцев)
+            # Берём последние 12 месяцев для среднего
+            recent_12 = []
+            for i in range(12):
+                m_dt = current_month_dt - timedelta(days=30*i)
+                m_dt = m_dt.replace(day=1)
+                m_label = m_dt.strftime("%Y-%m")
+                if m_label in month_data:
+                    recent_12.append(month_data[m_label])
+            
+            average = sum(recent_12) / len(recent_12) if recent_12 else 1
+            coefficient = now_count / average if average > 0 else 1.0
+            
+            # Собираем monthly_series и monthly_labels для графика (12 месяцев)
+            monthly_series = []
+            monthly_labels = []
+            for i in range(11, -1, -1):
+                m_dt = current_month_dt - timedelta(days=30*i)
+                m_dt = m_dt.replace(day=1)
+                m_label = m_dt.strftime("%Y-%m")
+                monthly_labels.append(m_label)
+                monthly_series.append(month_data.get(m_label, 0))
             
             # Находим пики и спады
-            max_month = max(dynamics, key=lambda x: x.get('count', 0))
-            min_month = min(dynamics, key=lambda x: x.get('count', 0))
+            if dynamics:
+                max_month = max(dynamics, key=lambda x: x.get('count', 0))
+                min_month = min(dynamics, key=lambda x: x.get('count', 0))
+            else:
+                max_month = min_month = {}
             
-            coefficient = current / average if average > 0 else 1.0
-            
-            # Определяем тренд (растёт/падает)
-            if len(counts) >= 3:
-                recent_avg = sum(counts[-3:]) / 3
-                earlier_avg = sum(counts[:3]) / 3
+            # Тренд (по последним 3 vs первым 3 месяцам из 12)
+            if len(monthly_series) >= 6:
+                recent_avg = sum(monthly_series[-3:]) / 3
+                earlier_avg = sum(monthly_series[:3]) / 3
                 trend = "growing" if recent_avg > earlier_avg * 1.1 else \
                         "declining" if recent_avg < earlier_avg * 0.9 else "stable"
             else:
                 trend = "unknown"
             
-            # Рост за год (сравниваем последний месяц с первым)
-            if len(counts) >= 2 and counts[0] > 0:
-                yearly_growth = round(((counts[-1] / counts[0]) - 1) * 100, 1)
-            else:
-                yearly_growth = 0.0
-            
             return round(coefficient, 2), {
-                "current_month": current,
-                "average_month": round(average),
+                # Новые поля YoY
+                "now_count": now_count,
+                "year_ago_count": year_ago_count,
+                "yoy_percent": yoy_percent,
+                "current_month_label": current_label,
+                "year_ago_month_label": year_ago_label,
+                
+                # Данные для графика
+                "monthly_series": monthly_series,
+                "monthly_labels": monthly_labels,
+                
+                # Сезонность
                 "coefficient": round(coefficient, 2),
+                "average_month": round(average),
+                
+                # Пики/спады
                 "peak_month": max_month.get('date', ''),
                 "peak_count": max_month.get('count', 0),
                 "low_month": min_month.get('date', ''),
                 "low_count": min_month.get('count', 0),
+                
+                # Тренд
                 "trend": trend,
-                "yearly_growth": yearly_growth,
+                
+                # Совместимость со старым кодом
+                "current_month": now_count,
+                "yearly_growth": yoy_percent,
                 "dynamics": dynamics
             }
             
         except Exception as e:
             return 1.0, {"error": str(e)}
-    
+
+
     # ═══════════════════════════════════════════════════════════
     # РАЗМЕР НИШИ
     # ═══════════════════════════════════════════════════════════
@@ -380,6 +444,73 @@ class MetricsCalculator:
             "reason": "Есть возможности, но требуется стратегия"
         }
 
+
+    
+    def determine_verdict_v3(
+        self,
+        now_count: int,
+        yoy_percent: float
+    ) -> Dict:
+        """
+        Определяет вердикт на основе NOW + YoY.
+        
+        Логика:
+        1. Если now_count < 5000 → микрониша (uncertain)
+        2. Если yoy < -30% → падающий рынок (not_recommended)
+        3. Если now_count >= 30000 AND yoy >= -10% → подходит (recommended)
+        4. Остальное → с ограничениями (conditional)
+        """
+        thresholds = VERDICT_V3_THRESHOLDS
+        
+        # 1. Микрониша
+        if now_count < thresholds["micro_volume"]:
+            return {
+                "verdict": "uncertain",
+                "verdict_label": "Микрониша",
+                "verdict_icon": "❓",
+                "reason": f"Малый объём спроса ({now_count:,} запросов/мес)"
+            }
+        
+        # 2. Падающий рынок
+        if yoy_percent < thresholds["falling_yoy"]:
+            return {
+                "verdict": "not_recommended",
+                "verdict_label": "Падающий рынок",
+                "verdict_icon": "❌",
+                "reason": f"Спрос упал на {abs(yoy_percent):.0f}% за год"
+            }
+        
+        # 3. Хорошая ниша
+        if now_count >= thresholds["medium_volume"] and yoy_percent >= thresholds["stable_yoy"]:
+            if yoy_percent >= thresholds["growing_yoy"]:
+                return {
+                    "verdict": "recommended",
+                    "verdict_label": "Растущий рынок",
+                    "verdict_icon": "✅",
+                    "reason": f"Спрос вырос на {yoy_percent:.0f}% за год"
+                }
+            else:
+                return {
+                    "verdict": "recommended",
+                    "verdict_label": "Подходит для входа",
+                    "verdict_icon": "✅",
+                    "reason": f"Стабильный спрос ({now_count:,} запросов/мес)"
+                }
+        
+        # 4. С ограничениями (всё остальное)
+        if yoy_percent < thresholds["stable_yoy"]:
+            reason = f"Спрос снижается ({yoy_percent:+.0f}% за год)"
+        elif now_count < thresholds["medium_volume"]:
+            reason = f"Небольшой объём ({now_count:,} запросов/мес)"
+        else:
+            reason = "Требуется анализ конкурентов"
+        
+        return {
+            "verdict": "conditional",
+            "verdict_label": "С ограничениями",
+            "verdict_icon": "⚠️",
+            "reason": reason
+        }
 
 # ═══════════════════════════════════════════════════════════════
 # ТЕСТ
