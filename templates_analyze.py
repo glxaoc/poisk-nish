@@ -188,18 +188,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 </div>
 
-
-<div class="grid-2">
-<div class="card">
-<h3>🎯 Структура спроса</h3>
-<div class="chart-container">
-<canvas id="pieChart"></canvas>
-</div>
-</div>
 <div class="card">
 <h3>📋 Кластеры запросов</h3>
 <div class="cluster-list" id="clusterList"></div>
-</div>
 </div>
 
 
@@ -207,7 +198,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 
 <script>
-var pieChart = null;
 var dynamicsChart = null;
 var pollInterval = null;
 
@@ -296,11 +286,7 @@ async function loadResults() {
             }
         }
         
-        // Pie chart
-        if (data.clusters) {
-            renderPieChart(data.clusters);
-            renderClusterList(data.clusters);
-        }
+        if (data.clusters) { renderClusterList(data.clusters); }
         
         document.getElementById('progressBar').classList.remove('active');
         document.getElementById('results').classList.add('active');
@@ -424,25 +410,6 @@ function updateProgress(pct, text) {
 
 function resetUI() { document.getElementById('btnAnalyze').disabled = false; }
 
-function renderPieChart(clusters) {
-    var ctx = document.getElementById('pieChart').getContext('2d');
-    if (pieChart) pieChart.destroy();
-    
-    var colors = ['#667eea','#764ba2','#f093fb','#f5576c','#4facfe','#00f2fe','#43e97b','#38f9d7','#fa709a','#fee140'];
-    var top = clusters.slice(0, 6);
-    var other = clusters.slice(6);
-    var otherSum = other.reduce((a,c) => a + c.count, 0);
-    
-    var labels = top.map(c => c.name);
-    var values = top.map(c => c.count);
-    if (otherSum > 0) { labels.push('Другое'); values.push(otherSum); }
-    
-    pieChart = new Chart(ctx, {
-        type: 'pie',
-        data: { labels: labels, datasets: [{ data: values, backgroundColor: colors.slice(0, labels.length), borderWidth: 2, borderColor: '#fff' }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 12, padding: 8, font: { size: 11 } } } } }
-    });
-}
 
 function renderClusterList(clusters) {
     var html = '';
