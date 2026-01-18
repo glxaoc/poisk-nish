@@ -188,29 +188,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 </div>
 
-<!-- Details Section -->
-<div class="details-section">
-<div class="details-title">📊 Детали анализа</div>
-
-<!-- Extra metrics -->
-<div class="extra-metrics">
-<div class="extra-card">
-<div class="extra-value" id="sizeIndex">—</div>
-<div class="extra-label">Размер ниши</div>
-</div>
-<div class="extra-card">
-<div class="extra-value" id="compIndex">—</div>
-<div class="extra-label">Конкуренция</div>
-</div>
-<div class="extra-card">
-<div class="extra-value" id="seasonCoef">—</div>
-<div class="extra-label">Сезонность</div>
-</div>
-<div class="extra-card">
-<div class="extra-value" id="totalQueries">—</div>
-<div class="extra-label">Запросов</div>
-</div>
-</div>
 
 <div class="grid-2">
 <div class="card">
@@ -225,7 +202,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 </div>
 
-</div>
 
 </div>
 </div>
