@@ -115,8 +115,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .ai-tag.red{background:#fee2e2;color:#991b1b}
 .scenario-card{background:#f8fafc;border-radius:12px;padding:15px;margin:10px 0;border-left:4px solid #667eea}
 .scenario-name{font-weight:600;font-size:15px;color:#1e293b;margin-bottom:8px}
-.scenario-cluster{font-size:12px;color:#667eea;margin-bottom:6px}
-.scenario-logic{font-size:14px;color:#475569;margin-bottom:6px}
+.scenario-action{font-size:14px;color:#475569;margin-bottom:6px}
 .scenario-risk{font-size:13px;color:#dc2626;background:#fef2f2;padding:6px 10px;border-radius:6px;margin-top:8px}
 /* Summary block */
 .summary-card{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);border-radius:16px;padding:25px;color:white;margin-top:20px}
@@ -169,23 +168,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="verdict-reason" id="verdictReason"></div>
 </div>
 
+<!-- 4 ключевых метрики -->
 <div class="stats-row">
-<div class="stat-card">
-<div class="stat-value" id="statTotal">0</div>
-<div class="stat-label">Запросов/мес</div>
-</div>
-<div class="stat-card">
-<div class="stat-value" id="statQueries">0</div>
-<div class="stat-label">Уникальных фраз</div>
-</div>
-<div class="stat-card">
-<div class="stat-value" id="statClusters">0</div>
-<div class="stat-label">Направлений</div>
-</div>
-</div>
-
-<!-- Metrics with progress bars -->
-<div class="stats-row" style="margin-top:15px">
 <div class="stat-card">
 <div class="metric-index" id="sizeIndex">0</div>
 <div class="metric-label">Размер ниши</div>
@@ -221,16 +205,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 </div>
 
-<div class="insights-grid" id="insightsGrid"></div>
 
-<div class="recs-card" id="recsCard" style="display:none">
-<h3>💡 Рекомендации алгоритма</h3>
-<div id="recsList"></div>
-</div>
 
 <div class="grid-2">
 <div class="card">
 <h3>📊 Структура спроса</h3>
+<div id="chartHint" style="font-size:13px;color:#666;margin-bottom:10px;padding:8px;background:#f8fafc;border-radius:8px"></div>
 <div class="chart-container">
 <canvas id="pieChart"></canvas>
 </div>
@@ -241,29 +221,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 </div>
 
-<!-- Summary Block -->
-<div class="summary-card" id="summaryCard" style="display:none">
-<h3>📋 Итог по нише</h3>
-<div class="summary-grid">
-<div class="summary-item">
-<div class="summary-label">Размер</div>
-<div class="summary-value" id="sumSize">—</div>
-</div>
-<div class="summary-item">
-<div class="summary-label">Конкуренция</div>
-<div class="summary-value" id="sumComp">—</div>
-</div>
-<div class="summary-item">
-<div class="summary-label">Сезон</div>
-<div class="summary-value" id="sumSeason">—</div>
-</div>
-</div>
-<div class="summary-directions">
-<div class="summary-label">Топ направления:</div>
-<div id="sumDirections"></div>
-</div>
-<div class="summary-verdict" id="sumVerdict"></div>
-</div>
+
 
 </div>
 </div>
@@ -334,14 +292,29 @@ async function loadResults() {
         if (data.size) {
             document.getElementById('sizeIndex').textContent = Math.round(data.size.size_index);
             document.getElementById('sizeBar').style.width = data.size.size_index + '%';
-            document.getElementById('sizeLabel').innerHTML = data.size.size_icon + ' ' + data.size.size_label;
+            var sizeKey = data.size.size_key;
+            var sizeHint = {
+                'micro': 'узкая аудитория',
+                'small': 'для теста идеи',
+                'medium': 'хороший потенциал',
+                'large': 'большой рынок',
+                'huge': 'массовый спрос'
+            };
+            document.getElementById('sizeLabel').innerHTML = data.size.size_icon + ' ' + (sizeHint[sizeKey] || data.size.size_label);
         }
         
         // Competition metric
         if (data.competition) {
             document.getElementById('compIndex').textContent = Math.round(data.competition.competition_index);
             document.getElementById('compBar').style.width = data.competition.competition_index + '%';
-            document.getElementById('compLabel').innerHTML = data.competition.competition_icon + ' ' + data.competition.competition_label;
+            var compKey = data.competition.competition_key;
+            var compHint = {
+                'low': 'можно заходить без бренда',
+                'medium': 'нужна стратегия',
+                'high': 'дорогой вход',
+                'very_high': 'только для крупных игроков'
+            };
+            document.getElementById('compLabel').innerHTML = data.competition.competition_icon + ' ' + (compHint[compKey] || data.competition.competition_label);
         }
         
         // Seasonality
@@ -376,14 +349,19 @@ async function loadResults() {
         // Recommendations
         renderRecs(data.recommendations);
         
+        // Chart hint
+        if (data.clusters && data.clusters.length > 0) {
+            var top = data.clusters[0];
+            document.getElementById('chartHint').textContent = 'Основной спрос: ' + top.name + ' (' + top.share + '%)';
+        }
+        
         // Chart
         renderPieChart(data.clusters);
         
         // Clusters
         renderClusterList(data.clusters);
         
-        // Summary block
-        renderSummary(data);
+
         
         document.getElementById('progressBar').classList.remove('active');
         document.getElementById('results').classList.add('active');
@@ -431,20 +409,19 @@ async function loadAIAnalysis(phrase, region) {
             html += '</div></div>';
         }
         
-        // Scenarios v2
+        // Scenarios v2.1 — компактный формат
         if (data.ai_scenarios && data.ai_scenarios.length > 0) {
             html += '<div class="ai-section">';
-            html += '<div class="ai-section-title">🎯 Сценарии входа</div>';
-            data.ai_scenarios.forEach(function(s, i) {
+            html += '<div class="ai-section-title">🎯 Как заходить</div>';
+            data.ai_scenarios.slice(0, 2).forEach(function(s, i) {
                 if (typeof s === 'object') {
                     html += '<div class="scenario-card">';
-                    html += '<div class="scenario-name">' + (i+1) + '. ' + (s.name || '') + '</div>';
-                    if (s.cluster) html += '<div class="scenario-cluster">📊 Кластер: ' + s.cluster + '</div>';
-                    if (s.logic) html += '<div class="scenario-logic">' + s.logic + '</div>';
+                    html += '<div class="scenario-name">' + (s.name || '') + '</div>';
+                    if (s.action) html += '<div class="scenario-action">' + s.action + '</div>';
                     if (s.risk) html += '<div class="scenario-risk">⚠️ ' + s.risk + '</div>';
                     html += '</div>';
                 } else {
-                    html += '<div class="scenario-card"><div class="scenario-name">' + (i+1) + '. ' + s + '</div></div>';
+                    html += '<div class="scenario-card"><div class="scenario-name">' + s + '</div></div>';
                 }
             });
             html += '</div>';
@@ -522,7 +499,8 @@ function renderPieChart(clusters) {
 
 function renderClusterList(clusters) {
     var html = '';
-    clusters.forEach(function(c, i) {
+    var top5 = clusters.slice(0, 5);
+    top5.forEach(function(c, i) {
         html += '<div class="cluster-item">';
         html += '<div class="cluster-header" onclick="toggleCluster(' + i + ')">';
         html += '<span class="cluster-name">' + c.name + '</span>';
