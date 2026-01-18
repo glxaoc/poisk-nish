@@ -63,13 +63,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 /* AI Block */
 .ai-card{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);border-radius:16px;padding:30px;color:white;margin-bottom:20px}
 .ai-card h3{color:#fff;margin-bottom:20px;font-size:1.3em}
-.ai-summary{font-size:16px;line-height:1.7;margin-bottom:25px;color:#e0e0e0}
-.ai-section{margin-bottom:20px}
-.ai-section-title{font-weight:600;margin-bottom:12px;color:#a0a0ff;font-size:14px;text-transform:uppercase;letter-spacing:1px}
-.ai-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.ai-tag{padding:6px 12px;border-radius:20px;font-size:13px;font-weight:500}
-.ai-tag.green{background:#dcfce7;color:#166534}
-.ai-tag.red{background:#fee2e2;color:#991b1b}
+.ai-trend{font-size:17px;line-height:1.7;margin-bottom:15px;color:#fff;font-weight:500}
+.ai-scale{font-size:14px;color:#a0c4ff;margin-bottom:15px;padding:10px 15px;background:rgba(255,255,255,0.05);border-radius:8px}
+.ai-clusters{font-size:14px;color:#c0c0c0;margin-bottom:20px;line-height:1.6}
+.ai-section{margin-top:20px;padding-top:15px;border-top:1px solid rgba(255,255,255,0.1)}
+.ai-section-title{font-weight:600;margin-bottom:12px;color:#a0a0ff;font-size:13px;text-transform:uppercase;letter-spacing:1px}
+.ai-limits,.ai-questions{margin:0;padding-left:20px;color:#b0b0b0;font-size:14px;line-height:1.8}
+.ai-limits li{color:#ffb0b0}
+.ai-questions li{color:#b0ffb0}
 .ai-loading{text-align:center;padding:40px;color:#888}
 .ai-loading .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#667eea;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -179,7 +180,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
 <!-- AI Analysis Block -->
 <div class="ai-card" id="aiCard">
-<h3>🧠 Анализ от ИИ</h3>
+<h3>💬 Комментарий к данным</h3>
 <div id="aiContent">
 <div class="ai-loading">
 <div class="spinner"></div>
@@ -343,63 +344,51 @@ function renderDynamicsChart(labels, values) {
 }
 
 async function loadAIAnalysis(phrase, region) {
-    document.getElementById('aiContent').innerHTML = '<div class="ai-loading"><div class="spinner"></div><div>Генерируем анализ...</div></div>';
+    document.getElementById("aiContent").innerHTML = '<div class="ai-loading"><div class="spinner"></div><div>Анализируем данные...</div></div>';
     
     try {
-        var resp = await fetch('/api/ai-analyze?phrase=' + encodeURIComponent(phrase) + '&region=' + region);
+        var resp = await fetch("/api/ai-analyze?phrase=" + encodeURIComponent(phrase) + "&region=" + region);
         var data = await resp.json();
         
-        var html = '';
+        var html = "";
         
-        // Summary
-        if (data.ai_summary) {
-            html += '<div class="ai-summary">' + data.ai_summary + '</div>';
+        // Trend description
+        if (data.trend_description) {
+            html += '<div class="ai-trend">' + data.trend_description + '</div>';
         }
         
-        // Suitable for
-        if (data.ai_suitable_for && data.ai_suitable_for.length > 0) {
-            html += '<div class="ai-section">';
-            html += '<div class="ai-section-title">✅ Подходит для</div>';
-            html += '<div class="ai-tags">';
-            data.ai_suitable_for.forEach(function(s) {
-                html += '<span class="ai-tag green">' + s + '</span>';
+        // Scale context
+        if (data.scale_context) {
+            html += '<div class="ai-scale">' + data.scale_context + '</div>';
+        }
+        
+        // Clusters note
+        if (data.clusters_note) {
+            html += '<div class="ai-clusters">' + data.clusters_note + '</div>';
+        }
+        
+        // Data limitations
+        if (data.data_limitations && data.data_limitations.length > 0) {
+            html += '<div class="ai-section"><div class="ai-section-title">⚠️ Ограничения данных</div><ul class="ai-limits">';
+            data.data_limitations.forEach(function(l) {
+                html += '<li>' + l + '</li>';
             });
-            html += '</div></div>';
+            html += '</ul></div>';
         }
         
-        // Not suitable for
-        if (data.ai_not_suitable_for && data.ai_not_suitable_for.length > 0) {
-            html += '<div class="ai-section">';
-            html += '<div class="ai-section-title">❌ Не подходит для</div>';
-            html += '<div class="ai-tags">';
-            data.ai_not_suitable_for.forEach(function(s) {
-                html += '<span class="ai-tag red">' + s + '</span>';
+        // User questions
+        if (data.user_questions && data.user_questions.length > 0) {
+            html += '<div class="ai-section"><div class="ai-section-title">❓ Вопросы для размышления</div><ul class="ai-questions">';
+            data.user_questions.forEach(function(q) {
+                html += '<li>' + q + '</li>';
             });
-            html += '</div></div>';
+            html += '</ul></div>';
         }
         
-        // Scenarios
-        if (data.ai_scenarios && data.ai_scenarios.length > 0) {
-            html += '<div class="ai-section">';
-            html += '<div class="ai-section-title">🎯 Как заходить</div>';
-            data.ai_scenarios.slice(0, 2).forEach(function(s) {
-                if (typeof s === 'object') {
-                    html += '<div class="scenario-card">';
-                    html += '<div class="scenario-name">' + (s.name || '') + '</div>';
-                    if (s.action) html += '<div class="scenario-action">' + s.action + '</div>';
-                    if (s.risk) html += '<div class="scenario-risk">⚠️ ' + s.risk + '</div>';
-                    html += '</div>';
-                } else {
-                    html += '<div class="scenario-card"><div class="scenario-name">' + s + '</div></div>';
-                }
-            });
-            html += '</div>';
-        }
-        
-        document.getElementById('aiContent').innerHTML = html || '<div style="color:#888">Не удалось получить анализ</div>';
+        document.getElementById("aiContent").innerHTML = html || '<div style="color:#888">Не удалось получить анализ</div>';
         
     } catch(e) {
-        document.getElementById('aiContent').innerHTML = '<div style="color:#888">Ошибка загрузки ИИ-анализа</div>';
+        document.getElementById("aiContent").innerHTML = '<div style="color:#888">Ошибка загрузки анализа</div>';
     }
 }
 

@@ -614,15 +614,14 @@ def api_ai_analyze():
     
     return jsonify({
         "phrase": phrase,
-        "ai_summary": ai_result.get("summary", ""),
-        "ai_scenarios": ai_result.get("scenarios", []),
-        "ai_suitable_for": ai_result.get("suitable_for", []),
-        "ai_not_suitable_for": ai_result.get("not_suitable_for", []),
-        "ai_risks": ai_result.get("risks", []),
-        "_tokens": ai_result.get("_tokens", 0)
+        "trend_description": ai_result.get("trend_description", ""),
+        "scale_context": ai_result.get("scale_context", ""),
+        "clusters_note": ai_result.get("clusters_note", ""),
+        "data_limitations": ai_result.get("data_limitations", []),
+        "user_questions": ai_result.get("user_questions", []),
+        "_tokens": ai_result.get("_tokens", 0),
+        "_version": ai_result.get("_version", "3.0")
     })
-
-
 
 @app.route('/api/analyze-v2')
 def api_analyze_v2():
