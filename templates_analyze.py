@@ -294,19 +294,7 @@ async function loadResults() {
             if (s.monthly_labels && s.monthly_series) {
                 renderDynamicsChart(s.monthly_labels, s.monthly_series);
             }
-            
-            // Season coef
-            document.getElementById('seasonCoef').textContent = '×' + (s.coefficient || 1).toFixed(2);
         }
-        
-        // Extra metrics
-        if (data.size) {
-            document.getElementById('sizeIndex').textContent = Math.round(data.size.size_index) + '/100';
-        }
-        if (data.competition) {
-            document.getElementById('compIndex').textContent = Math.round(data.competition.competition_index) + '/100';
-        }
-        document.getElementById('totalQueries').textContent = fmt(data.total_queries || 0);
         
         // Pie chart
         if (data.clusters) {
