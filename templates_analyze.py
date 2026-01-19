@@ -63,14 +63,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 /* AI Block */
 .ai-card{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);border-radius:16px;padding:30px;color:white;margin-bottom:20px}
 .ai-card h3{color:#fff;margin-bottom:20px;font-size:1.3em}
-.ai-trend{font-size:17px;line-height:1.7;margin-bottom:15px;color:#fff;font-weight:500}
-.ai-scale{font-size:14px;color:#a0c4ff;margin-bottom:15px;padding:10px 15px;background:rgba(255,255,255,0.05);border-radius:8px}
-.ai-clusters{font-size:14px;color:#c0c0c0;margin-bottom:20px;line-height:1.6}
-.ai-section{margin-top:20px;padding-top:15px;border-top:1px solid rgba(255,255,255,0.1)}
-.ai-section-title{font-weight:600;margin-bottom:12px;color:#a0a0ff;font-size:13px;text-transform:uppercase;letter-spacing:1px}
-.ai-limits,.ai-questions{margin:0;padding-left:20px;color:#b0b0b0;font-size:14px;line-height:1.8}
-.ai-limits li{color:#ffb0b0}
-.ai-questions li{color:#b0ffb0}
+.ai-observation{font-size:17px;line-height:1.7;margin-bottom:20px;color:#fff;font-weight:500;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.ai-section{margin-top:18px}
+.ai-section-title{font-weight:600;margin-bottom:10px;color:#a0a0ff;font-size:13px;text-transform:uppercase;letter-spacing:1px}
+.ai-list{margin:0;padding-left:20px;color:#d0d0d0;font-size:14px;line-height:1.8}
+.ai-list li{margin-bottom:6px}
+.ai-hypotheses li{color:#b0ffb0}
+.ai-challenges li{color:#ffb0b0}
+.ai-checks li{color:#b0d4ff}
 .ai-loading{text-align:center;padding:40px;color:#888}
 .ai-loading .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#667eea;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -180,7 +180,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
 <!-- AI Analysis Block -->
 <div class="ai-card" id="aiCard">
-<h3>💬 Комментарий к данным</h3>
+<h3>🧠 Анализ спроса</h3>
 <div id="aiContent">
 <div class="ai-loading">
 <div class="spinner"></div>
@@ -344,7 +344,7 @@ function renderDynamicsChart(labels, values) {
 }
 
 async function loadAIAnalysis(phrase, region) {
-    document.getElementById("aiContent").innerHTML = '<div class="ai-loading"><div class="spinner"></div><div>Анализируем данные...</div></div>';
+    document.getElementById("aiContent").innerHTML = '<div class="ai-loading"><div class="spinner"></div><div>Формируем гипотезы...</div></div>';
     
     try {
         var resp = await fetch("/api/ai-analyze?phrase=" + encodeURIComponent(phrase) + "&region=" + region);
@@ -352,35 +352,43 @@ async function loadAIAnalysis(phrase, region) {
         
         var html = "";
         
-        // Trend description
-        if (data.trend_description) {
-            html += '<div class="ai-trend">' + data.trend_description + '</div>';
+        // Key observation
+        if (data.key_observation) {
+            html += '<div class="ai-observation">' + data.key_observation + '</div>';
         }
         
-        // Scale context
-        if (data.scale_context) {
-            html += '<div class="ai-scale">' + data.scale_context + '</div>';
-        }
-        
-        // Clusters note
-        if (data.clusters_note) {
-            html += '<div class="ai-clusters">' + data.clusters_note + '</div>';
-        }
-        
-        // Data limitations
-        if (data.data_limitations && data.data_limitations.length > 0) {
-            html += '<div class="ai-section"><div class="ai-section-title">⚠️ Ограничения данных</div><ul class="ai-limits">';
-            data.data_limitations.forEach(function(l) {
-                html += '<li>' + l + '</li>';
+        // What this demand represents
+        if (data.what_this_demand_represents && data.what_this_demand_represents.length > 0) {
+            html += '<div class="ai-section"><div class="ai-section-title">🔍 За чем стоит этот спрос</div><ul class="ai-list">';
+            data.what_this_demand_represents.forEach(function(item) {
+                html += '<li>' + item + '</li>';
             });
             html += '</ul></div>';
         }
         
-        // User questions
-        if (data.user_questions && data.user_questions.length > 0) {
-            html += '<div class="ai-section"><div class="ai-section-title">❓ Вопросы для размышления</div><ul class="ai-questions">';
-            data.user_questions.forEach(function(q) {
-                html += '<li>' + q + '</li>';
+        // Possible business angles
+        if (data.possible_business_angles && data.possible_business_angles.length > 0) {
+            html += '<div class="ai-section"><div class="ai-section-title">💡 Бизнес-гипотезы</div><ul class="ai-list ai-hypotheses">';
+            data.possible_business_angles.forEach(function(item) {
+                html += '<li>' + item + '</li>';
+            });
+            html += '</ul></div>';
+        }
+        
+        // Entry challenges
+        if (data.entry_challenges && data.entry_challenges.length > 0) {
+            html += '<div class="ai-section"><div class="ai-section-title">⚠️ Сложности входа</div><ul class="ai-list ai-challenges">';
+            data.entry_challenges.forEach(function(item) {
+                html += '<li>' + item + '</li>';
+            });
+            html += '</ul></div>';
+        }
+        
+        // What must be checked
+        if (data.what_must_be_checked && data.what_must_be_checked.length > 0) {
+            html += '<div class="ai-section"><div class="ai-section-title">✅ Что проверить</div><ul class="ai-list ai-checks">';
+            data.what_must_be_checked.forEach(function(item) {
+                html += '<li>' + item + '</li>';
             });
             html += '</ul></div>';
         }
