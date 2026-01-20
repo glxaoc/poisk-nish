@@ -78,6 +78,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .ai-list li{margin-bottom:6px}
 .ai-difficulties li{color:#ffb0b0}
 .ai-thinking li{color:#b0d4ff}
+.ai-recommendations li{color:#90eec0}
 .ai-limits-block{background:rgba(255,255,255,0.02);padding:15px;border-radius:8px;margin-top:15px}
 .ai-limits li{color:#909090;font-size:13px}
 .ai-loading{text-align:center;padding:40px;color:#888}
@@ -416,7 +417,16 @@ async function loadAIAnalysis(phrase, region) {
             html += '</ul></div>';
         }
         
-        // 6. Analysis limits
+        // 6. Thinking recommendations
+        if (data.thinking_recommendations && data.thinking_recommendations.length > 0) {
+            html += '<div class="ai-block"><div class="ai-block-title">🔍 Направления для анализа</div><ul class="ai-list ai-recommendations">';
+            data.thinking_recommendations.forEach(function(item) {
+                html += '<li>' + item + '</li>';
+            });
+            html += '</ul></div>';
+        }
+        
+        // 7. Analysis limits
         if (data.analysis_limits && data.analysis_limits.length > 0) {
             html += '<div class="ai-block ai-limits-block"><div class="ai-block-title">🚫 Ограничения анализа</div><ul class="ai-list ai-limits">';
             data.analysis_limits.forEach(function(item) {

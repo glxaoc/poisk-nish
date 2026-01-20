@@ -619,9 +619,10 @@ def api_ai_analyze():
         "business_patterns": ai_result.get("business_patterns", []),
         "structural_difficulties": ai_result.get("structural_difficulties", []),
         "entrepreneur_thinking": ai_result.get("entrepreneur_thinking", []),
+        "thinking_recommendations": ai_result.get("thinking_recommendations", []),
         "analysis_limits": ai_result.get("analysis_limits", []),
         "_tokens": ai_result.get("_tokens", 0),
-        "_version": ai_result.get("_version", "4.3")
+        "_version": ai_result.get("_version", "4.5")
     })
 
 @app.route('/api/analyze-v2')
