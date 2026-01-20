@@ -614,13 +614,13 @@ def api_ai_analyze():
     
     return jsonify({
         "phrase": phrase,
-        "key_observation": ai_result.get("key_observation", ""),
-        "what_this_demand_represents": ai_result.get("what_this_demand_represents", []),
-        "possible_business_angles": ai_result.get("possible_business_angles", []),
-        "entry_challenges": ai_result.get("entry_challenges", []),
-        "what_must_be_checked": ai_result.get("what_must_be_checked", []),
+        "facts_summary": ai_result.get("facts_summary", {}),
+        "demand_interpretation": ai_result.get("demand_interpretation", {}),
+        "business_hypotheses": ai_result.get("business_hypotheses", []),
+        "structural_challenges": ai_result.get("structural_challenges", []),
+        "entrepreneur_questions": ai_result.get("entrepreneur_questions", []),
         "_tokens": ai_result.get("_tokens", 0),
-        "_version": ai_result.get("_version", "4.1")
+        "_version": ai_result.get("_version", "4.2")
     })
 
 @app.route('/api/analyze-v2')
