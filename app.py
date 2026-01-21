@@ -614,15 +614,18 @@ def api_ai_analyze():
     
     return jsonify({
         "phrase": phrase,
-        "facts_block": ai_result.get("facts_block", {}),
-        "demand_interpretation": ai_result.get("demand_interpretation", {}),
-        "business_patterns": ai_result.get("business_patterns", []),
-        "structural_difficulties": ai_result.get("structural_difficulties", []),
-        "entrepreneur_thinking": ai_result.get("entrepreneur_thinking", []),
-        "thinking_recommendations": ai_result.get("thinking_recommendations", []),
-        "analysis_limits": ai_result.get("analysis_limits", []),
+        "verdict": ai_result.get("verdict", {}),
+        "market_reality": ai_result.get("market_reality", ""),
+        "demand_map": ai_result.get("demand_map", {}),
+        "business_model_type": ai_result.get("business_model_type", {}),
+        "entry_risks": ai_result.get("entry_risks", []),
+        "beginner_mistakes": ai_result.get("beginner_mistakes", []),
+        "not_for": ai_result.get("not_for", []),
+        "sub_niches": ai_result.get("sub_niches", []),
+        "entry_strategy": ai_result.get("entry_strategy", {}),
+        "final_verdict": ai_result.get("final_verdict", {}),
         "_tokens": ai_result.get("_tokens", 0),
-        "_version": ai_result.get("_version", "4.5")
+        "_version": ai_result.get("_version", "5.0")
     })
 
 @app.route('/api/analyze-v2')

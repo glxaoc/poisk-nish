@@ -79,6 +79,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .ai-difficulties li{color:#ffb0b0}
 .ai-thinking li{color:#b0d4ff}
 .ai-recommendations li{color:#90eec0}
+.ai-verdict{padding:16px;border-radius:8px;margin-bottom:16px}
+.verdict-green{background:rgba(76,175,80,0.15);border-left:4px solid #4caf50}
+.verdict-yellow{background:rgba(255,193,7,0.15);border-left:4px solid #ffc107}
+.verdict-red{background:rgba(244,67,54,0.15);border-left:4px solid #f44336}
+.verdict-header{font-size:18px;font-weight:600;margin-bottom:8px}
+.verdict-reason{font-size:14px;color:#ccc}
+.ai-text{font-size:14px;line-height:1.6;color:#ddd}
+.segment-group{padding:8px 12px;margin:6px 0;border-radius:4px}
+.segment-growth{background:rgba(76,175,80,0.1)}
+.segment-stable{background:rgba(255,193,7,0.1)}
+.segment-risk{background:rgba(244,67,54,0.1)}
+.segment-label{font-weight:600;margin-right:8px}
+.model-type{font-size:14px;padding:8px 0;color:#ddd}
+.model-scale{font-size:13px;color:#90caf9;padding:4px 0}
+.ai-risks li{color:#ff8a80}
+.ai-mistakes li{color:#ffab91}
+.ai-notfor li{color:#ce93d8}
+.subniche{background:rgba(100,100,100,0.2);padding:10px 12px;margin:8px 0;border-radius:6px}
+.subniche-idea{font-size:14px;font-weight:500;color:#81d4fa}
+.subniche-why{font-size:12px;color:#aaa;margin-top:4px}
+.strategy{padding:10px 12px;margin:6px 0;border-radius:4px;font-size:13px}
+.strategy-cautious{background:rgba(156,39,176,0.1)}
+.strategy-aggressive{background:rgba(255,152,0,0.1)}
+.strategy-label{font-weight:600}
+.ai-conclusion{background:rgba(33,150,243,0.1);padding:16px;border-radius:8px;border-left:4px solid #2196f3}
+.conclusion-header{font-size:16px;font-weight:600}
+.conclusion-answer{margin-left:10px}
+.conclusion-condition{font-size:13px;color:#ffc107;margin:8px 0}
+.conclusion-summary{font-size:14px;color:#ddd;margin-top:8px}
 .ai-limits-block{background:rgba(255,255,255,0.02);padding:15px;border-radius:8px;margin-top:15px}
 .ai-limits li{color:#909090;font-size:13px}
 .ai-loading{text-align:center;padding:40px;color:#888}
@@ -354,7 +383,7 @@ function renderDynamicsChart(labels, values) {
 }
 
 async function loadAIAnalysis(phrase, region) {
-    document.getElementById("aiContent").innerHTML = '<div class="ai-loading"><div class="spinner"></div><div>Анализируем спрос...</div></div>';
+    document.getElementById("aiContent").innerHTML = '<div class="ai-loading"><div class="spinner"></div><div>Анализируем нишу...</div></div>';
     
     try {
         var resp = await fetch("/api/ai-analyze?phrase=" + encodeURIComponent(phrase) + "&region=" + region);
@@ -362,77 +391,93 @@ async function loadAIAnalysis(phrase, region) {
         
         var html = "";
         
-        // 1. Facts block
-        if (data.facts_block) {
-            html += '<div class="ai-block"><div class="ai-block-title">📊 Факты о спросе</div>';
-            if (data.facts_block.demand_change) {
-                html += '<div class="ai-fact">' + data.facts_block.demand_change + '</div>';
+        // 1. Verdict
+        if (data.verdict && data.verdict.status) {
+            var statusClass = data.verdict.status.includes("✅") ? "verdict-green" : (data.verdict.status.includes("⚠️") ? "verdict-yellow" : "verdict-red");
+            html += '<div class="ai-block ai-verdict ' + statusClass + '">';
+            html += '<div class="verdict-header">' + data.verdict.status + ' ' + (data.verdict.title || "") + '</div>';
+            html += '<div class="verdict-reason">' + (data.verdict.reason || "") + '</div>';
+            html += '</div>';
+        }
+        
+        // 2. Market Reality
+        if (data.market_reality) {
+            html += '<div class="ai-block"><div class="ai-block-title">📊 Что происходит с рынком</div>';
+            html += '<div class="ai-text">' + data.market_reality + '</div></div>';
+        }
+        
+        // 3. Demand Map
+        if (data.demand_map) {
+            html += '<div class="ai-block"><div class="ai-block-title">🗺️ Карта спроса</div>';
+            if (data.demand_map.growth && data.demand_map.growth.length > 0) {
+                html += '<div class="segment-group segment-growth"><span class="segment-label">🟢 Рост:</span> ' + data.demand_map.growth.join(", ") + '</div>';
             }
-            if (data.facts_block.absolute_context) {
-                html += '<div class="ai-fact-context">' + data.facts_block.absolute_context + '</div>';
+            if (data.demand_map.stable && data.demand_map.stable.length > 0) {
+                html += '<div class="segment-group segment-stable"><span class="segment-label">🟡 Стабильность:</span> ' + data.demand_map.stable.join(", ") + '</div>';
+            }
+            if (data.demand_map.risk && data.demand_map.risk.length > 0) {
+                html += '<div class="segment-group segment-risk"><span class="segment-label">🔴 Риск:</span> ' + data.demand_map.risk.join(", ") + '</div>';
             }
             html += '</div>';
         }
         
-        // 2. Demand interpretation
-        if (data.demand_interpretation) {
-            html += '<div class="ai-block"><div class="ai-block-title">📈 Как читать эту динамику</div>';
-            if (data.demand_interpretation.market_phase) {
-                html += '<div class="ai-phase">' + data.demand_interpretation.market_phase + '</div>';
+        // 4. Business Model
+        if (data.business_model_type && data.business_model_type.type) {
+            var modelIcon = data.business_model_type.type.includes("капитал") ? "💰" : (data.business_model_type.type.includes("систем") ? "⚙️" : "👤");
+            html += '<div class="ai-block"><div class="ai-block-title">🏢 Тип бизнес-модели</div>';
+            html += '<div class="model-type">' + modelIcon + ' <b>' + data.business_model_type.type + '</b>: ' + data.business_model_type.explanation + '</div>';
+            html += '<div class="model-scale">📈 ' + data.business_model_type.scalability + '</div></div>';
+        }
+        
+        // 5. Entry Risks
+        if (data.entry_risks && data.entry_risks.length > 0) {
+            html += '<div class="ai-block"><div class="ai-block-title">⚠️ Риски входа</div><ul class="ai-list ai-risks">';
+            data.entry_risks.forEach(function(item) { html += '<li>' + item + '</li>'; });
+            html += '</ul></div>';
+        }
+        
+        // 6. Beginner Mistakes
+        if (data.beginner_mistakes && data.beginner_mistakes.length > 0) {
+            html += '<div class="ai-block"><div class="ai-block-title">❌ Типичные ошибки</div><ul class="ai-list ai-mistakes">';
+            data.beginner_mistakes.forEach(function(item) { html += '<li>' + item + '</li>'; });
+            html += '</ul></div>';
+        }
+        
+        // 7. Not Suitable For
+        if (data.not_for && data.not_for.length > 0) {
+            html += '<div class="ai-block"><div class="ai-block-title">🚫 Кому не подходит</div><ul class="ai-list ai-notfor">';
+            data.not_for.forEach(function(item) { html += '<li>' + item + '</li>'; });
+            html += '</ul></div>';
+        }
+        
+        // 8. Sub-niches
+        if (data.sub_niches && data.sub_niches.length > 0) {
+            html += '<div class="ai-block"><div class="ai-block-title">💡 Потенциальные подниши</div>';
+            data.sub_niches.forEach(function(n) {
+                html += '<div class="subniche"><div class="subniche-idea">→ ' + n.idea + '</div>';
+                html += '<div class="subniche-why">' + n.why + '</div></div>';
+            });
+            html += '</div>';
+        }
+        
+        // 9. Entry Strategy
+        if (data.entry_strategy) {
+            html += '<div class="ai-block"><div class="ai-block-title">🎯 Стратегия входа</div>';
+            if (data.entry_strategy.cautious) {
+                html += '<div class="strategy strategy-cautious"><span class="strategy-label">🐢 Осторожный:</span> ' + data.entry_strategy.cautious + '</div>';
             }
-            if (data.demand_interpretation.key_tension) {
-                html += '<div class="ai-tension">💥 ' + data.demand_interpretation.key_tension + '</div>';
+            if (data.entry_strategy.aggressive) {
+                html += '<div class="strategy strategy-aggressive"><span class="strategy-label">🚀 Агрессивный:</span> ' + data.entry_strategy.aggressive + '</div>';
             }
             html += '</div>';
         }
         
-        // 3. Business patterns
-        if (data.business_patterns && data.business_patterns.length > 0) {
-            html += '<div class="ai-block"><div class="ai-block-title">🏢 Типовые бизнес-паттерны</div>';
-            data.business_patterns.forEach(function(p) {
-                html += '<div class="ai-pattern">';
-                html += '<div class="ai-pattern-name">' + p.pattern + '</div>';
-                html += '<div class="ai-pattern-desc">' + p.description + '</div>';
-                html += '<div class="ai-pattern-note">ℹ️ ' + p.note + '</div>';
-                html += '</div>';
-            });
-            html += '</div>';
-        }
-        
-        // 4. Structural difficulties
-        if (data.structural_difficulties && data.structural_difficulties.length > 0) {
-            html += '<div class="ai-block"><div class="ai-block-title">⚠️ Структурные сложности</div><ul class="ai-list ai-difficulties">';
-            data.structural_difficulties.forEach(function(item) {
-                html += '<li>' + item + '</li>';
-            });
-            html += '</ul></div>';
-        }
-        
-        // 5. Entrepreneur thinking
-        if (data.entrepreneur_thinking && data.entrepreneur_thinking.length > 0) {
-            html += '<div class="ai-block"><div class="ai-block-title">💭 Вопросы предпринимателя</div><ul class="ai-list ai-thinking">';
-            data.entrepreneur_thinking.forEach(function(item) {
-                html += '<li>' + item + '</li>';
-            });
-            html += '</ul></div>';
-        }
-        
-        // 6. Thinking recommendations
-        if (data.thinking_recommendations && data.thinking_recommendations.length > 0) {
-            html += '<div class="ai-block"><div class="ai-block-title">🔍 Направления для анализа</div><ul class="ai-list ai-recommendations">';
-            data.thinking_recommendations.forEach(function(item) {
-                html += '<li>' + item + '</li>';
-            });
-            html += '</ul></div>';
-        }
-        
-        // 7. Analysis limits
-        if (data.analysis_limits && data.analysis_limits.length > 0) {
-            html += '<div class="ai-block ai-limits-block"><div class="ai-block-title">🚫 Ограничения анализа</div><ul class="ai-list ai-limits">';
-            data.analysis_limits.forEach(function(item) {
-                html += '<li>' + item + '</li>';
-            });
-            html += '</ul></div>';
+        // 10. Final Verdict
+        if (data.final_verdict && data.final_verdict.answer) {
+            var answerIcon = data.final_verdict.answer.toLowerCase().includes("да") ? "✅" : (data.final_verdict.answer.toLowerCase().includes("нет") ? "❌" : "⚠️");
+            html += '<div class="ai-block ai-conclusion">';
+            html += '<div class="conclusion-header">👉 Стоит ли заходить? <span class="conclusion-answer">' + answerIcon + ' ' + data.final_verdict.answer + '</span></div>';
+            html += '<div class="conclusion-summary">' + data.final_verdict.summary + '</div></div>';
         }
         
         document.getElementById("aiContent").innerHTML = html || '<div style="color:#888">Не удалось получить анализ</div>';
