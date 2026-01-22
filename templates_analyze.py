@@ -149,6 +149,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .phrase-item:last-child{border-bottom:none}
 .phrase-text{color:#555}
 .phrase-count{color:#667eea;font-weight:500}
+
+/* AI Button */
+.ai-button-container{text-align:center;padding:40px 20px}
+.ai-launch-btn{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border:none;padding:16px 32px;font-size:16px;font-weight:600;border-radius:12px;cursor:pointer;transition:all 0.3s ease;box-shadow:0 4px 15px rgba(102,126,234,0.4)}
+.ai-launch-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(102,126,234,0.5)}
+.ai-cost{margin-top:12px;color:#888;font-size:13px}
 </style>
 </head>
 <body>
@@ -239,6 +245,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
 <script>
 var dynamicsChart = null;
+var currentPhrase = '';
+var currentRegion = 225;
 var pollInterval = null;
 
 function fmt(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
@@ -331,8 +339,10 @@ async function loadResults() {
         document.getElementById('progressBar').classList.remove('active');
         document.getElementById('results').classList.add('active');
         
-        // Load AI analysis async
-        loadAIAnalysis(phrase, region);
+        // Store for AI button
+        currentPhrase = phrase;
+        currentRegion = region;
+        showAIButton();
         
     } catch(e) { alert('Ошибка: ' + e); }
     resetUI();
@@ -380,6 +390,14 @@ function renderDynamicsChart(labels, values) {
             }
         }
     });
+}
+
+function showAIButton() {
+    document.getElementById("aiContent").innerHTML = '<div class="ai-button-container"><button class="ai-launch-btn" onclick="launchAIAnalysis()">🚀 Запустить ИИ-анализ</button><div class="ai-cost">~5 сек · ~0.3 ₽</div></div>';
+}
+
+function launchAIAnalysis() {
+    loadAIAnalysis(currentPhrase, currentRegion);
 }
 
 async function loadAIAnalysis(phrase, region) {
