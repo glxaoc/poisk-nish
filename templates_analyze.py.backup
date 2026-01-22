@@ -11,8 +11,8 @@ ANALYZE_HTML = r'''<!DOCTYPE html>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f7fa;min-height:100vh}
-.header{background:#0f172a;color:white;padding:20px 40px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f7fa;min-height:100vh}
+.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:20px 40px}
 .header h1{font-size:1.8em;font-weight:600}
 .container{max-width:1200px;margin:0 auto;padding:20px}
 .search-card{background:white;border-radius:16px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,0.08);margin-bottom:20px}
@@ -20,15 +20,15 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .form-group{flex:1;min-width:200px}
 .form-group label{display:block;margin-bottom:8px;font-weight:600;color:#333;font-size:14px}
 .form-group input,.form-group select{width:100%;padding:14px 16px;border:2px solid #e0e0e0;border-radius:10px;font-size:16px}
-.form-group input:focus{outline:none;border-color:#1a56db}
-.btn{background:#1a56db;color:white;border:none;padding:14px 40px;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer}
+.form-group input:focus{outline:none;border-color:#667eea}
+.btn{background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;padding:14px 40px;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer}
 .btn:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(102,126,234,0.4)}
 .btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
 
 .progress-bar{display:none;margin-top:20px}
 .progress-bar.active{display:block}
 .progress-track{background:#e0e0e0;border-radius:10px;height:8px;overflow:hidden}
-.progress-fill{background:#1a56db;height:100%;width:0%;transition:width 0.3s}
+.progress-fill{background:linear-gradient(90deg,#667eea,#764ba2);height:100%;width:0%;transition:width 0.3s}
 .progress-text{text-align:center;margin-top:10px;color:#666;font-size:14px}
 
 .results{display:none}
@@ -36,10 +36,10 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 
 /* Verdict block */
 .verdict-card{border-radius:16px;padding:25px;margin-bottom:20px;text-align:center}
-.verdict-card.recommended{background:#f0fdf4;color:#166534;border:2px solid #22c55e}
-.verdict-card.conditional{background:#fefce8;color:#854d0e;border:2px solid #eab308}
-.verdict-card.not_recommended{background:#fef2f2;color:#991b1b;border:2px solid #ef4444}
-.verdict-card.uncertain{background:#f9fafb;color:#374151;border:2px solid #6b7280}
+.verdict-card.recommended{background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%);color:white}
+.verdict-card.conditional{background:linear-gradient(135deg,#eab308 0%,#ca8a04 100%);color:white}
+.verdict-card.not_recommended{background:linear-gradient(135deg,#ef4444 0%,#dc2626 100%);color:white}
+.verdict-card.uncertain{background:linear-gradient(135deg,#6b7280 0%,#4b5563 100%);color:white}
 .verdict-icon{font-size:3em;margin-bottom:10px}
 .verdict-label{font-size:1.5em;font-weight:700;margin-bottom:10px}
 .verdict-reason{font-size:14px;opacity:0.9}
@@ -61,7 +61,7 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .yoy-hint{font-size:12px;color:#888;margin-top:10px;text-align:center}
 
 /* AI Block */
-.ai-card{background:#f8fafc;border-radius:16px;padding:30px;color:#1e293b;margin-bottom:20px;border:1px solid #e2e8f0}
+.ai-card{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);border-radius:16px;padding:30px;color:white;margin-bottom:20px}
 .ai-card h3{color:#fff;margin-bottom:20px;font-size:1.3em}
 .ai-block{margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.08)}
 .ai-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
@@ -86,7 +86,7 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .verdict-header{font-size:18px;font-weight:600;margin-bottom:8px}
 .verdict-reason{font-size:14px;color:#ccc}
 .ai-text{font-size:14px;line-height:1.6;color:#ddd}
-.segment-group{padding:10px 14px;margin:8px 0;border-radius:4px;background:#fff;border-left:3px solid #94a3b8}
+.segment-group{padding:8px 12px;margin:6px 0;border-radius:4px}
 .segment-growth{background:rgba(76,175,80,0.1)}
 .segment-stable{background:rgba(255,193,7,0.1)}
 .segment-risk{background:rgba(244,67,54,0.1)}
@@ -111,9 +111,9 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .ai-limits-block{background:rgba(255,255,255,0.02);padding:15px;border-radius:8px;margin-top:15px}
 .ai-limits li{color:#909090;font-size:13px}
 .ai-loading{text-align:center;padding:40px;color:#888}
-.ai-loading .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#1a56db;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px}
+.ai-loading .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#667eea;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.scenario-card{background:#f8fafc;border-radius:12px;padding:15px;margin:10px 0;border-left:4px solid #1a56db}
+.scenario-card{background:#f8fafc;border-radius:12px;padding:15px;margin:10px 0;border-left:4px solid #667eea}
 .scenario-name{font-weight:600;font-size:15px;color:#1e293b;margin-bottom:8px}
 .scenario-action{font-size:14px;color:#475569;margin-bottom:6px}
 .scenario-risk{font-size:13px;color:#dc2626;background:#fef2f2;padding:6px 10px;border-radius:6px;margin-top:8px}
@@ -131,7 +131,7 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .extra-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px}
 @media(max-width:800px){.extra-metrics{grid-template-columns:repeat(2,1fr)}}
 .extra-card{background:white;border-radius:10px;padding:15px;text-align:center}
-.extra-value{font-size:20px;font-weight:700;color:#1a56db}
+.extra-value{font-size:20px;font-weight:700;color:#667eea}
 .extra-label{font-size:11px;color:#888;margin-top:4px}
 
 /* Clusters */
@@ -141,19 +141,19 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .cluster-header:hover{background:#f0f0f0}
 .cluster-name{font-weight:600;color:#333;font-size:14px}
 .cluster-stats{display:flex;gap:10px;align-items:center}
-.cluster-count{color:#1a56db;font-weight:600;font-size:13px}
-.cluster-share{background:#1a56db;color:white;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.cluster-count{color:#667eea;font-weight:600;font-size:13px}
+.cluster-share{background:#667eea;color:white;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600}
 .cluster-phrases{display:none;padding:12px 15px;border-top:1px solid #eee;background:white}
 .cluster-phrases.open{display:block}
 .phrase-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f5f5f5;font-size:13px}
 .phrase-item:last-child{border-bottom:none}
 .phrase-text{color:#555}
-.phrase-count{color:#1a56db;font-weight:500}
+.phrase-count{color:#667eea;font-weight:500}
 
 /* AI Button */
 .ai-button-container{text-align:center;padding:40px 20px}
-.ai-launch-btn{background:#0f172a;color:white;border:none;padding:16px 32px;font-size:16px;font-weight:600;border-radius:12px;cursor:pointer;transition:all 0.3s ease;box-shadow:0 4px 15px rgba(102,126,234,0.4)}
-.ai-launch-btn:hover{background:#1e40af}
+.ai-launch-btn{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border:none;padding:16px 32px;font-size:16px;font-weight:600;border-radius:12px;cursor:pointer;transition:all 0.3s ease;box-shadow:0 4px 15px rgba(102,126,234,0.4)}
+.ai-launch-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(102,126,234,0.5)}
 .ai-cost{margin-top:12px;color:#888;font-size:13px}
 </style>
 </head>
@@ -225,7 +225,7 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 
 <!-- AI Analysis Block -->
 <div class="ai-card" id="aiCard">
-<h3>Анализ спроса</h3>
+<h3>🧠 Анализ спроса</h3>
 <div id="aiContent">
 <div class="ai-loading">
 <div class="spinner"></div>
@@ -361,12 +361,12 @@ function renderDynamicsChart(labels, values) {
             datasets: [{
                 label: 'Запросов',
                 data: values,
-                borderColor: '#1a56db',
+                borderColor: '#667eea',
                 backgroundColor: 'rgba(102,126,234,0.1)',
                 fill: true,
                 tension: 0.3,
                 pointRadius: 4,
-                pointBackgroundColor: '#1a56db'
+                pointBackgroundColor: '#667eea'
             }]
         },
         options: {
@@ -393,7 +393,7 @@ function renderDynamicsChart(labels, values) {
 }
 
 function showAIButton() {
-    document.getElementById("aiContent").innerHTML = '<div class="ai-button-container"><button class="ai-launch-btn" onclick="launchAIAnalysis()">Получить анализ</button><div class="ai-cost">~5 сек · ~0.3 ₽</div></div>';
+    document.getElementById("aiContent").innerHTML = '<div class="ai-button-container"><button class="ai-launch-btn" onclick="launchAIAnalysis()">🚀 Запустить ИИ-анализ</button><div class="ai-cost">~5 сек · ~0.3 ₽</div></div>';
 }
 
 function launchAIAnalysis() {
@@ -420,21 +420,21 @@ async function loadAIAnalysis(phrase, region) {
         
         // 2. Market Reality
         if (data.market_reality) {
-            html += '<div class="ai-block"><div class="ai-block-title">Что происходит с рынком</div>';
+            html += '<div class="ai-block"><div class="ai-block-title">📊 Что происходит с рынком</div>';
             html += '<div class="ai-text">' + data.market_reality + '</div></div>';
         }
         
         // 3. Demand Map
         if (data.demand_map) {
-            html += '<div class="ai-block"><div class="ai-block-title">Карта спроса</div>';
+            html += '<div class="ai-block"><div class="ai-block-title">🗺️ Карта спроса</div>';
             if (data.demand_map.growth && data.demand_map.growth.length > 0) {
-                html += '<div class="segment-group segment-growth"><span class="segment-label">Рост:</span> ' + data.demand_map.growth.join(", ") + '</div>';
+                html += '<div class="segment-group segment-growth"><span class="segment-label">🟢 Рост:</span> ' + data.demand_map.growth.join(", ") + '</div>';
             }
             if (data.demand_map.stable && data.demand_map.stable.length > 0) {
-                html += '<div class="segment-group segment-stable"><span class="segment-label">Стабильно:</span> ' + data.demand_map.stable.join(", ") + '</div>';
+                html += '<div class="segment-group segment-stable"><span class="segment-label">🟡 Стабильность:</span> ' + data.demand_map.stable.join(", ") + '</div>';
             }
             if (data.demand_map.risk && data.demand_map.risk.length > 0) {
-                html += '<div class="segment-group segment-risk"><span class="segment-label">Риск:</span> ' + data.demand_map.risk.join(", ") + '</div>';
+                html += '<div class="segment-group segment-risk"><span class="segment-label">🔴 Риск:</span> ' + data.demand_map.risk.join(", ") + '</div>';
             }
             html += '</div>';
         }
@@ -442,35 +442,35 @@ async function loadAIAnalysis(phrase, region) {
         // 4. Business Model
         if (data.business_model_type && data.business_model_type.type) {
             var modelIcon = data.business_model_type.type.includes("капитал") ? "💰" : (data.business_model_type.type.includes("систем") ? "⚙️" : "👤");
-            html += '<div class="ai-block"><div class="ai-block-title">Тип бизнес-модели</div>';
+            html += '<div class="ai-block"><div class="ai-block-title">🏢 Тип бизнес-модели</div>';
             html += '<div class="model-type">' + modelIcon + ' <b>' + data.business_model_type.type + '</b>: ' + data.business_model_type.explanation + '</div>';
             html += '<div class="model-scale">📈 ' + data.business_model_type.scalability + '</div></div>';
         }
         
         // 5. Entry Risks
         if (data.entry_risks && data.entry_risks.length > 0) {
-            html += '<div class="ai-block"><div class="ai-block-title">Риски входа</div><ul class="ai-list ai-risks">';
+            html += '<div class="ai-block"><div class="ai-block-title">⚠️ Риски входа</div><ul class="ai-list ai-risks">';
             data.entry_risks.forEach(function(item) { html += '<li>' + item + '</li>'; });
             html += '</ul></div>';
         }
         
         // 6. Beginner Mistakes
         if (data.beginner_mistakes && data.beginner_mistakes.length > 0) {
-            html += '<div class="ai-block"><div class="ai-block-title">Типичные ошибки новичков</div><ul class="ai-list ai-mistakes">';
+            html += '<div class="ai-block"><div class="ai-block-title">❌ Типичные ошибки</div><ul class="ai-list ai-mistakes">';
             data.beginner_mistakes.forEach(function(item) { html += '<li>' + item + '</li>'; });
             html += '</ul></div>';
         }
         
         // 7. Not Suitable For
         if (data.not_for && data.not_for.length > 0) {
-            html += '<div class="ai-block"><div class="ai-block-title">Кому не подходит</div><ul class="ai-list ai-notfor">';
+            html += '<div class="ai-block"><div class="ai-block-title">🚫 Кому не подходит</div><ul class="ai-list ai-notfor">';
             data.not_for.forEach(function(item) { html += '<li>' + item + '</li>'; });
             html += '</ul></div>';
         }
         
         // 8. Sub-niches
         if (data.sub_niches && data.sub_niches.length > 0) {
-            html += '<div class="ai-block"><div class="ai-block-title">Потенциальные подниши</div>';
+            html += '<div class="ai-block"><div class="ai-block-title">💡 Потенциальные подниши</div>';
             data.sub_niches.forEach(function(n) {
                 html += '<div class="subniche"><div class="subniche-idea">→ ' + n.idea + '</div>';
                 html += '<div class="subniche-why">' + n.why + '</div></div>';
@@ -480,21 +480,21 @@ async function loadAIAnalysis(phrase, region) {
         
         // 9. Entry Strategy
         if (data.entry_strategy) {
-            html += '<div class="ai-block"><div class="ai-block-title">Стратегия входа</div>';
+            html += '<div class="ai-block"><div class="ai-block-title">🎯 Стратегия входа</div>';
             if (data.entry_strategy.cautious) {
-                html += '<div class="strategy strategy-cautious"><span class="strategy-label">Осторожный:</span> ' + data.entry_strategy.cautious + '</div>';
+                html += '<div class="strategy strategy-cautious"><span class="strategy-label">🐢 Осторожный:</span> ' + data.entry_strategy.cautious + '</div>';
             }
             if (data.entry_strategy.aggressive) {
-                html += '<div class="strategy strategy-aggressive"><span class="strategy-label">Агрессивный:</span> ' + data.entry_strategy.aggressive + '</div>';
+                html += '<div class="strategy strategy-aggressive"><span class="strategy-label">🚀 Агрессивный:</span> ' + data.entry_strategy.aggressive + '</div>';
             }
             html += '</div>';
         }
         
         // 10. Final Verdict
         if (data.final_verdict && data.final_verdict.answer) {
-            var answerClass = data.final_verdict.answer.toLowerCase().includes("да") ? "answer-yes" : (data.final_verdict.answer.toLowerCase().includes("нет") ? "answer-no" : "answer-conditional");
+            var answerIcon = data.final_verdict.answer.toLowerCase().includes("да") ? "✅" : (data.final_verdict.answer.toLowerCase().includes("нет") ? "❌" : "⚠️");
             html += '<div class="ai-block ai-conclusion">';
-            html += '<div class="conclusion-header">Стоит ли заходить? <span class="conclusion-answer">' + data.final_verdict.answer + '</span></div>';
+            html += '<div class="conclusion-header">👉 Стоит ли заходить? <span class="conclusion-answer">' + answerIcon + ' ' + data.final_verdict.answer + '</span></div>';
             html += '<div class="conclusion-summary">' + data.final_verdict.summary + '</div></div>';
         }
         
