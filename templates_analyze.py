@@ -167,7 +167,7 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 <div class="search-form">
 <div class="form-group" style="flex:2">
 <label>Поисковая фраза</label>
-<input type="text" id="phrase" placeholder="Например: купить кофемашину">
+<input type="text" id="phrase" placeholder="Введите поисковый запрос">
 </div>
 <div class="form-group" style="flex:1">
 <label>Регион</label>
@@ -199,24 +199,24 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 <div class="yoy-row">
 <div class="yoy-card">
 <div class="yoy-value" id="nowValue">—</div>
-<div class="yoy-label">Сейчас</div>
+<div class="yoy-label">Текущий месяц</div>
 <div class="yoy-month" id="nowMonth"></div>
 </div>
 <div class="yoy-card">
 <div class="yoy-value" id="yearAgoValue">—</div>
-<div class="yoy-label">Год назад</div>
+<div class="yoy-label">Тот же месяц, год назад</div>
 <div class="yoy-month" id="yearAgoMonth"></div>
 </div>
 <div class="yoy-card">
 <div class="yoy-value" id="yoyValue">—</div>
-<div class="yoy-label">Изменение YoY</div>
+<div class="yoy-label">Динамика год к году</div>
 <div class="yoy-month">год к году</div>
 </div>
 </div>
 
 <!-- Dynamics chart -->
 <div class="dynamics-card">
-<h3>Динамика за 12 месяцев</h3>
+<h3>Динамика спроса</h3>
 <div class="dynamics-chart">
 <canvas id="dynamicsChart"></canvas>
 </div>
@@ -235,7 +235,7 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 </div>
 
 <div class="card">
-<h3>Кластеры запросов</h3>
+<h3>Структура запросов</h3>
 <div class="cluster-list" id="clusterList"></div>
 </div>
 
@@ -284,7 +284,7 @@ async function checkStatus() {
         updateProgress(data.progress, 'Собрано ' + data.collected + ' запросов...');
         if (data.status === 'done') {
             clearInterval(pollInterval);
-            updateProgress(100, 'Анализ данных...');
+            updateProgress(100, 'Обработка данных');
             setTimeout(loadResults, 500);
         }
     } catch(e) { console.error(e); }
@@ -401,7 +401,7 @@ function launchAIAnalysis() {
 }
 
 async function loadAIAnalysis(phrase, region) {
-    document.getElementById("aiContent").innerHTML = '<div class="ai-loading"><div class="spinner"></div><div>Анализ данных...</div></div>';
+    document.getElementById("aiContent").innerHTML = '<div class="ai-loading"><div class="spinner"></div><div>Обработка данных</div></div>';
     
     try {
         var resp = await fetch("/api/ai-analyze?phrase=" + encodeURIComponent(phrase) + "&region=" + region);
@@ -420,7 +420,7 @@ async function loadAIAnalysis(phrase, region) {
         
         // 2. Market Reality
         if (data.market_reality) {
-            html += '<div class="ai-block"><div class="ai-block-title">Что происходит с рынком</div>';
+            html += '<div class="ai-block"><div class="ai-block-title">Состояние рынка</div>';
             html += '<div class="ai-text">' + data.market_reality + '</div></div>';
         }
         
@@ -456,7 +456,7 @@ async function loadAIAnalysis(phrase, region) {
         
         // 6. Beginner Mistakes
         if (data.beginner_mistakes && data.beginner_mistakes.length > 0) {
-            html += '<div class="ai-block"><div class="ai-block-title">Типичные ошибки новичков</div><ul class="ai-list ai-mistakes">';
+            html += '<div class="ai-block"><div class="ai-block-title">Распространённые ошибки</div><ul class="ai-list ai-mistakes">';
             data.beginner_mistakes.forEach(function(item) { html += '<li>' + item + '</li>'; });
             html += '</ul></div>';
         }
@@ -470,7 +470,7 @@ async function loadAIAnalysis(phrase, region) {
         
         // 8. Sub-niches
         if (data.sub_niches && data.sub_niches.length > 0) {
-            html += '<div class="ai-block"><div class="ai-block-title">Потенциальные подниши</div>';
+            html += '<div class="ai-block"><div class="ai-block-title">Возможные направления</div>';
             data.sub_niches.forEach(function(n) {
                 html += '<div class="subniche"><div class="subniche-idea">→ ' + n.idea + '</div>';
                 html += '<div class="subniche-why">' + n.why + '</div></div>';
@@ -494,14 +494,14 @@ async function loadAIAnalysis(phrase, region) {
         if (data.final_verdict && data.final_verdict.answer) {
             var answerClass = data.final_verdict.answer.toLowerCase().includes("да") ? "answer-yes" : (data.final_verdict.answer.toLowerCase().includes("нет") ? "answer-no" : "answer-conditional");
             html += '<div class="ai-block ai-conclusion">';
-            html += '<div class="conclusion-header">Стоит ли заходить? <span class="conclusion-answer">' + data.final_verdict.answer + '</span></div>';
+            html += '<div class="conclusion-header">Итоговая оценка <span class="conclusion-answer">' + data.final_verdict.answer + '</span></div>';
             html += '<div class="conclusion-summary">' + data.final_verdict.summary + '</div></div>';
         }
         
         document.getElementById("aiContent").innerHTML = html || '<div style="color:#888">Не удалось получить анализ</div>';
         
     } catch(e) {
-        document.getElementById("aiContent").innerHTML = '<div style="color:#888">Ошибка загрузки анализа</div>';
+        document.getElementById("aiContent").innerHTML = '<div style="color:#888">Не удалось получить анализ</div>';
     }
 }
 
