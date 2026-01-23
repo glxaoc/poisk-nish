@@ -159,7 +159,7 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 </head>
 <body>
 <div class="header">
-<h1>🔍 Поиск ниш</h1>
+<h1>Поиск ниш</h1>
 </div>
 
 <div class="container">
@@ -178,7 +178,7 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 <option value="2">Санкт-Петербург</option>
 </select>
 </div>
-<button class="btn" id="btnAnalyze" onclick="startAnalysis()">Анализировать</button>
+<button class="btn" id="btnAnalyze" onclick="startAnalysis()">Показать данные</button>
 </div>
 <div class="progress-bar" id="progressBar">
 <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
@@ -216,7 +216,7 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 
 <!-- Dynamics chart -->
 <div class="dynamics-card">
-<h3>📈 Динамика за 12 месяцев</h3>
+<h3>Динамика за 12 месяцев</h3>
 <div class="dynamics-chart">
 <canvas id="dynamicsChart"></canvas>
 </div>
@@ -235,7 +235,7 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 </div>
 
 <div class="card">
-<h3>📋 Кластеры запросов</h3>
+<h3>Кластеры запросов</h3>
 <div class="cluster-list" id="clusterList"></div>
 </div>
 
@@ -393,7 +393,7 @@ function renderDynamicsChart(labels, values) {
 }
 
 function showAIButton() {
-    document.getElementById("aiContent").innerHTML = '<div class="ai-button-container"><button class="ai-launch-btn" onclick="launchAIAnalysis()">Получить анализ</button><div class="ai-cost">~5 сек · ~0.3 ₽</div></div>';
+    document.getElementById("aiContent").innerHTML = '<div class="ai-button-container"><button class="ai-launch-btn" onclick="launchAIAnalysis()">Получить анализ</button><div class="ai-cost">Около 5 секунд</div></div>';
 }
 
 function launchAIAnalysis() {
@@ -401,7 +401,7 @@ function launchAIAnalysis() {
 }
 
 async function loadAIAnalysis(phrase, region) {
-    document.getElementById("aiContent").innerHTML = '<div class="ai-loading"><div class="spinner"></div><div>Анализируем нишу...</div></div>';
+    document.getElementById("aiContent").innerHTML = '<div class="ai-loading"><div class="spinner"></div><div>Анализ данных...</div></div>';
     
     try {
         var resp = await fetch("/api/ai-analyze?phrase=" + encodeURIComponent(phrase) + "&region=" + region);
@@ -444,7 +444,7 @@ async function loadAIAnalysis(phrase, region) {
             var modelIcon = data.business_model_type.type.includes("капитал") ? "💰" : (data.business_model_type.type.includes("систем") ? "⚙️" : "👤");
             html += '<div class="ai-block"><div class="ai-block-title">Тип бизнес-модели</div>';
             html += '<div class="model-type">' + modelIcon + ' <b>' + data.business_model_type.type + '</b>: ' + data.business_model_type.explanation + '</div>';
-            html += '<div class="model-scale">📈 ' + data.business_model_type.scalability + '</div></div>';
+            html += '<div class="model-scale">' + data.business_model_type.scalability + '</div></div>';
         }
         
         // 5. Entry Risks
