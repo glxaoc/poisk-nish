@@ -155,6 +155,10 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .ai-launch-btn{background:#0f172a;color:white;border:none;padding:16px 32px;font-size:16px;font-weight:600;border-radius:12px;cursor:pointer;transition:all 0.3s ease;box-shadow:0 4px 15px rgba(102,126,234,0.4)}
 .ai-launch-btn:hover{background:#1e40af}
 .ai-cost{margin-top:12px;color:#888;font-size:13px}
+.ai-error{text-align:center;padding:40px 20px}
+.ai-error-text{color:#64748b;margin-bottom:16px}
+.ai-retry-btn{background:#1a56db;color:white;border:none;padding:12px 24px;font-size:14px;font-weight:500;border-radius:6px;cursor:pointer}
+.ai-retry-btn:hover{background:#1e40af}
 </style>
 </head>
 <body>
@@ -396,6 +400,10 @@ function showAIButton() {
     document.getElementById("aiContent").innerHTML = '<div class="ai-button-container"><button class="ai-launch-btn" onclick="launchAIAnalysis()">Получить анализ</button><div class="ai-cost">Около 5 секунд</div></div>';
 }
 
+function showAIError() {
+    document.getElementById("aiContent").innerHTML = '<div class="ai-error"><div class="ai-error-text">Не удалось получить анализ</div><button class="ai-retry-btn" onclick="launchAIAnalysis()">Повторить</button></div>';
+}
+
 function launchAIAnalysis() {
     loadAIAnalysis(currentPhrase, currentRegion);
 }
@@ -498,10 +506,10 @@ async function loadAIAnalysis(phrase, region) {
             html += '<div class="conclusion-summary">' + data.final_verdict.summary + '</div></div>';
         }
         
-        document.getElementById("aiContent").innerHTML = html || '<div style="color:#888">Не удалось получить анализ</div>';
+        if (html) { document.getElementById("aiContent").innerHTML = html; } else { showAIError(); }
         
     } catch(e) {
-        document.getElementById("aiContent").innerHTML = '<div style="color:#888">Не удалось получить анализ</div>';
+        showAIError();
     }
 }
 
