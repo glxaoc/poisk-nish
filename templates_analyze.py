@@ -62,54 +62,54 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 
 /* AI Block */
 .ai-card{background:#f8fafc;border-radius:16px;padding:30px;color:#1e293b;margin-bottom:20px;border:1px solid #e2e8f0}
-.ai-card h3{color:#fff;margin-bottom:20px;font-size:1.3em}
+.ai-card h3{color:#1e293b;margin-bottom:20px;font-size:1.3em}
 .ai-block{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #e2e8f0}
 .ai-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
 .ai-block-title{font-weight:600;margin-bottom:12px;color:#1e293b;font-size:14px;letter-spacing:0}
-.ai-fact{font-size:17px;line-height:1.6;color:#fff;font-weight:500}
-.ai-fact-context{font-size:14px;color:#a0c4ff;margin-top:8px}
-.ai-phase{font-size:15px;line-height:1.7;color:#e0e0e0}
-.ai-tension{font-size:14px;color:#ffd700;font-style:italic;margin-top:10px}
-.ai-pattern{background:rgba(255,255,255,0.03);padding:12px 15px;border-radius:8px;margin-bottom:10px}
-.ai-pattern-name{font-size:15px;font-weight:600;color:#b0ffb0;margin-bottom:5px}
-.ai-pattern-desc{font-size:13px;color:#d0d0d0;line-height:1.5;margin-bottom:8px}
-.ai-pattern-note{font-size:11px;color:#808080;font-style:italic}
-.ai-list{margin:0;padding-left:20px;color:#d0d0d0;font-size:14px;line-height:1.8}
+.ai-fact{font-size:17px;line-height:1.6;color:#1e293b;font-weight:500}
+.ai-fact-context{font-size:14px;color:#64748b;margin-top:8px}
+.ai-phase{font-size:15px;line-height:1.7;color:#475569}
+.ai-tension{font-size:14px;color:#d97706;font-style:italic;margin-top:10px}
+.ai-pattern{background:#f8fafc;border:1px solid #e2e8f0;padding:12px 15px;border-radius:8px;margin-bottom:10px}
+.ai-pattern-name{font-size:15px;font-weight:600;color:#1a56db;margin-bottom:5px}
+.ai-pattern-desc{font-size:13px;color:#475569;line-height:1.5;margin-bottom:8px}
+.ai-pattern-note{font-size:11px;color:#64748b;font-style:italic}
+.ai-list{margin:0;padding-left:20px;color:#475569;font-size:14px;line-height:1.8}
 .ai-list li{margin-bottom:6px}
-.ai-difficulties li{color:#ffb0b0}
-.ai-thinking li{color:#b0d4ff}
-.ai-recommendations li{color:#90eec0}
+.ai-difficulties li{color:#64748b}
+.ai-thinking li{color:#64748b}
+.ai-recommendations li{color:#64748b}
 .ai-verdict{padding:16px;border-radius:8px;margin-bottom:16px}
-.verdict-green{background:rgba(76,175,80,0.15);border-left:4px solid #4caf50}
-.verdict-yellow{background:rgba(255,193,7,0.15);border-left:4px solid #ffc107}
-.verdict-red{background:rgba(244,67,54,0.15);border-left:4px solid #f44336}
+.verdict-green{background:#f0fdf4;border:1px solid #22c55e;border-left:3px solid #22c55e}
+.verdict-yellow{background:#fefce8;border:1px solid #eab308;border-left:3px solid #eab308}
+.verdict-red{background:#fef2f2;border:1px solid #ef4444;border-left:3px solid #ef4444}
 .verdict-header{font-size:18px;font-weight:600;margin-bottom:8px}
-.verdict-reason{font-size:14px;color:#ccc}
-.ai-text{font-size:14px;line-height:1.6;color:#ddd}
-.segment-group{padding:10px 14px;margin:8px 0;border-radius:4px;background:#fff;border-left:3px solid #94a3b8}
-.segment-growth{background:rgba(76,175,80,0.1)}
-.segment-stable{background:rgba(255,193,7,0.1)}
-.segment-risk{background:rgba(244,67,54,0.1)}
+.verdict-reason{font-size:14px;color:#64748b}
+.ai-text{font-size:14px;line-height:1.6;color:#475569}
+.segment-group{padding:10px 14px;margin:8px 0;border-radius:8px;background:white;border:1px solid #e2e8f0;border-left:3px solid #94a3b8}
+.segment-growth{border-left-color:#22c55e}
+.segment-stable{border-left-color:#eab308}
+.segment-risk{border-left-color:#ef4444}
 .segment-label{font-weight:600;margin-right:8px}
-.model-type{font-size:14px;padding:8px 0;color:#ddd}
-.model-scale{font-size:13px;color:#90caf9;padding:4px 0}
-.ai-risks li{color:#ff8a80}
-.ai-mistakes li{color:#ffab91}
-.ai-notfor li{color:#ce93d8}
-.subniche{background:rgba(100,100,100,0.2);padding:10px 12px;margin:8px 0;border-radius:6px}
-.subniche-idea{font-size:14px;font-weight:500;color:#81d4fa}
-.subniche-why{font-size:12px;color:#aaa;margin-top:4px}
+.model-type{font-size:14px;padding:8px 0;color:#475569}
+.model-scale{font-size:13px;color:#1a56db;padding:4px 0}
+.ai-risks li{color:#64748b}
+.ai-mistakes li{color:#64748b}
+.ai-notfor li{color:#64748b}
+.subniche{background:#f8fafc;border:1px solid #e2e8f0;padding:10px 12px;margin:8px 0;border-radius:6px}
+.subniche-idea{font-size:14px;font-weight:500;color:#1a56db}
+.subniche-why{font-size:12px;color:#64748b;margin-top:4px}
 .strategy{padding:10px 12px;margin:6px 0;border-radius:4px;font-size:13px}
-.strategy-cautious{background:rgba(156,39,176,0.1)}
-.strategy-aggressive{background:rgba(255,152,0,0.1)}
+.strategy-cautious{background:#f8fafc;border:1px solid #e2e8f0}
+.strategy-aggressive{background:#f8fafc;border:1px solid #e2e8f0}
 .strategy-label{font-weight:600}
-.ai-conclusion{background:rgba(33,150,243,0.1);padding:16px;border-radius:8px;border-left:4px solid #2196f3}
+.ai-conclusion{background:#f8fafc;padding:16px;border-radius:8px;border-left:4px solid #1a56db}
 .conclusion-header{font-size:16px;font-weight:600}
 .conclusion-answer{margin-left:10px}
-.conclusion-condition{font-size:13px;color:#ffc107;margin:8px 0}
-.conclusion-summary{font-size:14px;color:#ddd;margin-top:8px}
-.ai-limits-block{background:rgba(255,255,255,0.02);padding:15px;border-radius:8px;margin-top:15px}
-.ai-limits li{color:#909090;font-size:13px}
+.conclusion-condition{font-size:13px;color:#d97706;margin:8px 0}
+.conclusion-summary{font-size:14px;color:#475569;margin-top:8px}
+.ai-limits-block{background:#f8fafc;border:1px solid #e2e8f0;padding:15px;border-radius:8px;margin-top:15px}
+.ai-limits li{color:#64748b;font-size:13px}
 .ai-loading{text-align:center;padding:40px;color:#888}
 .ai-loading .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#1a56db;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -152,13 +152,14 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 
 /* AI Button */
 .ai-button-container{text-align:center;padding:40px 20px}
-.ai-launch-btn{background:#0f172a;color:white;border:none;padding:16px 32px;font-size:16px;font-weight:600;border-radius:12px;cursor:pointer;transition:all 0.3s ease;box-shadow:0 4px 15px rgba(102,126,234,0.4)}
-.ai-launch-btn:hover{background:#1e40af}
+.ai-launch-btn{background:#1a56db;color:white;border:none;padding:16px 32px;font-size:16px;font-weight:600;border-radius:8px;cursor:pointer;transition:all 0.2s ease;border:1px solid #1e40af}
+.ai-launch-btn:hover{background:#1e40af;transform:none}
 .ai-cost{margin-top:12px;color:#888;font-size:13px}
 .ai-error{text-align:center;padding:40px 20px}
 .ai-error-text{color:#64748b;margin-bottom:16px}
 .ai-retry-btn{background:#1a56db;color:white;border:none;padding:12px 24px;font-size:14px;font-weight:500;border-radius:6px;cursor:pointer}
 .ai-retry-btn:hover{background:#1e40af}
+.ai-retry-container{text-align:center;margin-top:24px;padding-top:20px;border-top:1px solid #e2e8f0}
 </style>
 </head>
 <body>
@@ -506,7 +507,9 @@ async function loadAIAnalysis(phrase, region) {
             html += '<div class="conclusion-summary">' + data.final_verdict.summary + '</div></div>';
         }
         
-        if (html) { document.getElementById("aiContent").innerHTML = html; } else { showAIError(); }
+        // Добавляем кнопку повторить в любом случае
+        html += '<div class="ai-retry-container"><button class="ai-retry-btn" onclick="launchAIAnalysis()">Повторить анализ</button></div>';
+        document.getElementById("aiContent").innerHTML = html || showAIError()
         
     } catch(e) {
         showAIError();
