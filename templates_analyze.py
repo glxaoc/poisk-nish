@@ -61,11 +61,11 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .yoy-hint{font-size:12px;color:#888;margin-top:10px;text-align:center}
 
 /* AI Block */
-.ai-card{background:#f8fafc;border-radius:8px;padding:30px;color:#1e293b;margin-bottom:20px;border:1px solid #e2e8f0}
-.ai-card h3{color:#1e293b;margin-bottom:20px;font-size:1.3em}
-.ai-block{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #e2e8f0}
+.ai-card{background:white;border-radius:6px;padding:32px;color:#1e293b;margin-bottom:24px;border:1px solid #e2e8f0}
+.ai-card h3{color:#0f172a;margin-bottom:24px;font-size:1.2em;font-weight:600;letter-spacing:-0.01em}
+.ai-block{margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid #e2e8f0}
 .ai-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.ai-block-title{font-weight:600;margin-bottom:12px;color:#1e293b;font-size:14px;letter-spacing:0}
+.ai-block-title{font-weight:600;margin-bottom:14px;color:#475569;font-size:13px;letter-spacing:0.02em;text-transform:uppercase}
 .ai-fact{font-size:17px;line-height:1.6;color:#1e293b;font-weight:500}
 .ai-fact-context{font-size:14px;color:#64748b;margin-top:8px}
 .ai-phase{font-size:15px;line-height:1.7;color:#475569}
@@ -74,40 +74,40 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .ai-pattern-name{font-size:15px;font-weight:600;color:#1a56db;margin-bottom:5px}
 .ai-pattern-desc{font-size:13px;color:#475569;line-height:1.5;margin-bottom:8px}
 .ai-pattern-note{font-size:11px;color:#64748b;font-style:italic}
-.ai-list{margin:0;padding-left:20px;color:#475569;font-size:14px;line-height:1.8}
-.ai-list li{margin-bottom:6px}
+.ai-list{margin:0;padding-left:22px;color:#475569;font-size:14px;line-height:1.9}
+.ai-list li{margin-bottom:8px}
 .ai-difficulties li{color:#64748b}
 .ai-thinking li{color:#64748b}
 .ai-recommendations li{color:#64748b}
-.ai-verdict{padding:16px;border-radius:8px;margin-bottom:16px}
+.ai-verdict{padding:18px 20px;border-radius:6px;margin-bottom:20px}
 .verdict-green{background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #10b981}
 .verdict-yellow{background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #f59e0b}
 .verdict-red{background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #ef4444}
-.verdict-header{font-size:18px;font-weight:600;margin-bottom:8px}
-.verdict-reason{font-size:14px;color:#64748b}
-.ai-text{font-size:14px;line-height:1.6;color:#475569}
+.verdict-header{font-size:16px;font-weight:600;margin-bottom:10px;color:#0f172a}
+.verdict-reason{font-size:14px;color:#64748b;line-height:1.6}
+.ai-text{font-size:14px;line-height:1.7;color:#475569}
 .segment-group{padding:12px 16px;margin:10px 0;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #94a3b8;font-size:14px}
 .segment-growth{border-left-color:#22c55e}
 .segment-stable{border-left-color:#eab308}
 .segment-risk{border-left-color:#ef4444}
 .segment-label{font-weight:600;margin-right:8px}
-.model-type{font-size:14px;padding:8px 0;color:#475569}
+.model-type{font-size:14px;padding:8px 0;color:#475569;line-height:1.6}
 .model-scale{font-size:13px;color:#64748b;padding:4px 0;margin-top:6px}
 .ai-risks li{color:#64748b}
 .ai-mistakes li{color:#64748b}
 .ai-notfor li{color:#64748b}
 .subniche{background:white;border:1px solid #e2e8f0;padding:14px 16px;margin:10px 0;border-radius:6px;border-left:3px solid #1a56db}
-.subniche-idea{font-size:14px;font-weight:500;color:#1a56db}
-.subniche-why{font-size:12px;color:#64748b;margin-top:4px}
+.subniche-idea{font-size:14px;font-weight:600;color:#0f172a}
+.subniche-why{font-size:13px;color:#64748b;margin-top:6px;line-height:1.6}
 .strategy{padding:14px 16px;margin:10px 0;border-radius:6px;font-size:14px;line-height:1.6}
 .strategy-cautious{background:white;border:1px solid #e2e8f0;border-left:3px solid #3b82f6}
 .strategy-aggressive{background:white;border:1px solid #e2e8f0;border-left:3px solid #8b5cf6}
 .strategy-label{font-weight:600}
 .ai-conclusion{background:white;padding:20px;border-radius:6px;border:1px solid #e2e8f0;border-left:3px solid #1a56db}
-.conclusion-header{font-size:16px;font-weight:600}
+.conclusion-header{font-size:15px;font-weight:600;color:#0f172a}
 .conclusion-answer{margin-left:10px}
 .conclusion-condition{font-size:13px;color:#d97706;margin:8px 0}
-.conclusion-summary{font-size:14px;color:#475569;margin-top:8px}
+.conclusion-summary{font-size:14px;color:#475569;margin-top:10px;line-height:1.7}
 .ai-limits-block{background:#f8fafc;border:1px solid #e2e8f0;padding:15px;border-radius:8px;margin-top:15px}
 .ai-limits li{color:#64748b;font-size:13px}
 .ai-loading{text-align:center;padding:40px;color:#888}
@@ -426,9 +426,11 @@ async function loadAIAnalysis(phrase, region) {
         
         // 1. Verdict
         if (data.verdict && data.verdict.status) {
+            // Убираем emoji, оставляем только текст
+            var statusText = data.verdict.status.replace(/[✅⚠️❌❓]/g, '').trim();
             var statusClass = data.verdict.status.includes("✅") ? "verdict-green" : (data.verdict.status.includes("⚠️") ? "verdict-yellow" : "verdict-red");
             html += '<div class="ai-block ai-verdict ' + statusClass + '">';
-            html += '<div class="verdict-header">' + data.verdict.status + ' ' + (data.verdict.title || "") + '</div>';
+            html += '<div class="verdict-header">' + (data.verdict.title || statusText) + '</div>';
             html += '<div class="verdict-reason">' + (data.verdict.reason || "") + '</div>';
             html += '</div>';
         }
@@ -486,7 +488,7 @@ async function loadAIAnalysis(phrase, region) {
         if (data.sub_niches && data.sub_niches.length > 0) {
             html += '<div class="ai-block"><div class="ai-block-title">Возможные направления</div>';
             data.sub_niches.forEach(function(n) {
-                html += '<div class="subniche"><div class="subniche-idea">→ ' + n.idea + '</div>';
+                html += '<div class="subniche"><div class="subniche-idea">' + n.idea + '</div>';
                 html += '<div class="subniche-why">' + n.why + '</div></div>';
             });
             html += '</div>';
