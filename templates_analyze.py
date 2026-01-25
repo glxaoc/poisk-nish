@@ -416,6 +416,12 @@ async function loadAIAnalysis(phrase, region) {
         var resp = await fetch("/api/ai-analyze?phrase=" + encodeURIComponent(phrase) + "&region=" + region);
         var data = await resp.json();
         
+        // Проверяем HTTP статус и наличие ошибки
+        if (!resp.ok || data.error) {
+            showAIError(data.error || "Не удалось загрузить анализ");
+            return;
+        }
+        
         var html = "";
         
         // 1. Verdict
@@ -509,10 +515,11 @@ async function loadAIAnalysis(phrase, region) {
         
         // Добавляем кнопку повторить в любом случае
         html += '<div class="ai-retry-container"><button class="ai-retry-btn" onclick="launchAIAnalysis()">Повторить анализ</button></div>';
-        document.getElementById("aiContent").innerHTML = html || showAIError()
+        document.getElementById("aiContent").innerHTML = html;
         
     } catch(e) {
-        showAIError();
+        console.error('AI Analysis error:', e);
+        showAIError("Ошибка при загрузке: " + e.message);
     }
 }
 
