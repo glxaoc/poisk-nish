@@ -611,6 +611,12 @@ def api_ai_analyze():
     
     # Генерируем ИИ-анализ
     ai_result = generate_ai_analysis(phrase, metrics_for_ai, data.get("clusters", []))
+
+    # Проверяем валидность ответа от ИИ
+    if "_error" in ai_result or not ai_result.get("verdict"):
+        error_msg = ai_result.get("_error", "Пустой ответ от ИИ-сервиса")
+        return jsonify({"error": f"Не удалось получить анализ: {error_msg}"}), 500
+    
     
     return jsonify({
         "phrase": phrase,

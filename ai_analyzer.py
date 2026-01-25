@@ -4,6 +4,7 @@
 """
 
 import requests
+import logging
 import json
 
 # Прокси на сервере в Нидерландах
@@ -32,12 +33,13 @@ def generate_ai_analysis(phrase: str, metrics: dict, clusters: list) -> dict:
                 "clusters": clusters
             },
             headers={"X-Api-Key": SECRET_KEY},
-            timeout=30
+            timeout=90
         )
         
         if response.status_code == 200:
             return response.json()
         else:
+            logging.error(f"AI Proxy HTTP error {response.status_code} for phrase: {phrase}")
             return {
                 "summary": "Ошибка при обращении к ИИ.",
                 "scenarios": [],
@@ -46,6 +48,7 @@ def generate_ai_analysis(phrase: str, metrics: dict, clusters: list) -> dict:
             }
             
     except requests.Timeout:
+        logging.error(f"AI Proxy timeout for phrase: {phrase}")
         return {
             "summary": "Превышено время ожидания ответа от ИИ.",
             "scenarios": [],
@@ -53,11 +56,12 @@ def generate_ai_analysis(phrase: str, metrics: dict, clusters: list) -> dict:
             "_error": "Timeout"
         }
     except Exception as e:
+        logging.error(f"AI Proxy error for phrase '{phrase}': {type(e).__name__}: {str(e)}")
         return {
             "summary": "Ошибка соединения с ИИ-сервисом.",
             "scenarios": [],
             "risks": [],
-            "_error": str(e)
+            "_error": f"{type(e).__name__}: {str(e)}"
         }
 
 
