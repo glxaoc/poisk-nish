@@ -61,7 +61,7 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .yoy-hint{font-size:12px;color:#888;margin-top:10px;text-align:center}
 
 /* AI Block */
-.ai-card{background:#f8fafc;border-radius:16px;padding:30px;color:#1e293b;margin-bottom:20px;border:1px solid #e2e8f0}
+.ai-card{background:#f8fafc;border-radius:8px;padding:30px;color:#1e293b;margin-bottom:20px;border:1px solid #e2e8f0}
 .ai-card h3{color:#1e293b;margin-bottom:20px;font-size:1.3em}
 .ai-block{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #e2e8f0}
 .ai-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
@@ -80,30 +80,30 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .ai-thinking li{color:#64748b}
 .ai-recommendations li{color:#64748b}
 .ai-verdict{padding:16px;border-radius:8px;margin-bottom:16px}
-.verdict-green{background:#f0fdf4;border:1px solid #22c55e;border-left:3px solid #22c55e}
-.verdict-yellow{background:#fefce8;border:1px solid #eab308;border-left:3px solid #eab308}
-.verdict-red{background:#fef2f2;border:1px solid #ef4444;border-left:3px solid #ef4444}
+.verdict-green{background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #10b981}
+.verdict-yellow{background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #f59e0b}
+.verdict-red{background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #ef4444}
 .verdict-header{font-size:18px;font-weight:600;margin-bottom:8px}
 .verdict-reason{font-size:14px;color:#64748b}
 .ai-text{font-size:14px;line-height:1.6;color:#475569}
-.segment-group{padding:10px 14px;margin:8px 0;border-radius:8px;background:white;border:1px solid #e2e8f0;border-left:3px solid #94a3b8}
+.segment-group{padding:12px 16px;margin:10px 0;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #94a3b8;font-size:14px}
 .segment-growth{border-left-color:#22c55e}
 .segment-stable{border-left-color:#eab308}
 .segment-risk{border-left-color:#ef4444}
 .segment-label{font-weight:600;margin-right:8px}
 .model-type{font-size:14px;padding:8px 0;color:#475569}
-.model-scale{font-size:13px;color:#1a56db;padding:4px 0}
+.model-scale{font-size:13px;color:#64748b;padding:4px 0;margin-top:6px}
 .ai-risks li{color:#64748b}
 .ai-mistakes li{color:#64748b}
 .ai-notfor li{color:#64748b}
-.subniche{background:#f8fafc;border:1px solid #e2e8f0;padding:10px 12px;margin:8px 0;border-radius:6px}
+.subniche{background:white;border:1px solid #e2e8f0;padding:14px 16px;margin:10px 0;border-radius:6px;border-left:3px solid #1a56db}
 .subniche-idea{font-size:14px;font-weight:500;color:#1a56db}
 .subniche-why{font-size:12px;color:#64748b;margin-top:4px}
-.strategy{padding:10px 12px;margin:6px 0;border-radius:4px;font-size:13px}
-.strategy-cautious{background:#f8fafc;border:1px solid #e2e8f0}
-.strategy-aggressive{background:#f8fafc;border:1px solid #e2e8f0}
+.strategy{padding:14px 16px;margin:10px 0;border-radius:6px;font-size:14px;line-height:1.6}
+.strategy-cautious{background:white;border:1px solid #e2e8f0;border-left:3px solid #3b82f6}
+.strategy-aggressive{background:white;border:1px solid #e2e8f0;border-left:3px solid #8b5cf6}
 .strategy-label{font-weight:600}
-.ai-conclusion{background:#f8fafc;padding:16px;border-radius:8px;border-left:4px solid #1a56db}
+.ai-conclusion{background:white;padding:20px;border-radius:6px;border:1px solid #e2e8f0;border-left:3px solid #1a56db}
 .conclusion-header{font-size:16px;font-weight:600}
 .conclusion-answer{margin-left:10px}
 .conclusion-condition{font-size:13px;color:#d97706;margin:8px 0}
@@ -113,7 +113,7 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .ai-loading{text-align:center;padding:40px;color:#888}
 .ai-loading .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#1a56db;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.scenario-card{background:#f8fafc;border-radius:12px;padding:15px;margin:10px 0;border-left:4px solid #1a56db}
+.scenario-card{background:white;border-radius:6px;padding:16px;margin:10px 0;border:1px solid #e2e8f0;border-left:3px solid #1a56db}
 .scenario-name{font-weight:600;font-size:15px;color:#1e293b;margin-bottom:8px}
 .scenario-action{font-size:14px;color:#475569;margin-bottom:6px}
 .scenario-risk{font-size:13px;color:#dc2626;background:#fef2f2;padding:6px 10px;border-radius:6px;margin-top:8px}
@@ -456,9 +456,8 @@ async function loadAIAnalysis(phrase, region) {
         
         // 4. Business Model
         if (data.business_model_type && data.business_model_type.type) {
-            var modelIcon = data.business_model_type.type.includes("капитал") ? "💰" : (data.business_model_type.type.includes("систем") ? "⚙️" : "👤");
             html += '<div class="ai-block"><div class="ai-block-title">Тип бизнес-модели</div>';
-            html += '<div class="model-type">' + modelIcon + ' <b>' + data.business_model_type.type + '</b>: ' + data.business_model_type.explanation + '</div>';
+            html += '<div class="model-type"><b>' + data.business_model_type.type + '</b> — ' + data.business_model_type.explanation + '</div>';
             html += '<div class="model-scale">' + data.business_model_type.scalability + '</div></div>';
         }
         
