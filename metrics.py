@@ -455,12 +455,22 @@ class MetricsCalculator:
         Определяет вердикт на основе NOW + YoY.
         
         Логика:
+        0. Если now_count == 0 → нет спроса (no_demand)
         1. Если now_count < 5000 → микрониша (uncertain)
         2. Если yoy < -30% → падающий рынок (not_recommended)
         3. Если now_count >= 30000 AND yoy >= -10% → подходит (recommended)
         4. Остальное → с ограничениями (conditional)
         """
         thresholds = VERDICT_V3_THRESHOLDS
+        
+        # 0. Нет спроса
+        if now_count == 0:
+            return {
+                "verdict": "no_demand",
+                "verdict_label": "Нет спроса",
+                "verdict_icon": "🚫",
+                "reason": "В Яндекс Wordstat нет зафиксированных запросов по этой фразе"
+            }
         
         # 1. Микрониша
         if now_count < thresholds["micro_volume"]:

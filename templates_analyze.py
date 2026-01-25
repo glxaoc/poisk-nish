@@ -40,6 +40,7 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .verdict-card.conditional{background:#fefce8;color:#854d0e;border:2px solid #eab308}
 .verdict-card.not_recommended{background:#fef2f2;color:#991b1b;border:2px solid #ef4444}
 .verdict-card.uncertain{background:#f9fafb;color:#374151;border:2px solid #6b7280}
+.verdict-card.no_demand{background:#f8fafc;color:#475569;border:2px solid #94a3b8}
 .verdict-icon{font-size:3em;margin-bottom:10px}
 .verdict-label{font-size:1.5em;font-weight:700;margin-bottom:10px}
 .verdict-reason{font-size:14px;opacity:0.9}
@@ -83,6 +84,8 @@ body{background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 .verdict-green{background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #10b981}
 .verdict-yellow{background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #f59e0b}
 .verdict-red{background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #ef4444}
+.verdict-no_demand{background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #94a3b8}
+.verdict-uncertain{background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #94a3b8}
 .verdict-header{font-size:16px;font-weight:600;margin-bottom:10px;color:#0f172a}
 .verdict-reason{font-size:14px;color:#64748b;line-height:1.6}
 .ai-text{font-size:14px;line-height:1.7;color:#475569}
