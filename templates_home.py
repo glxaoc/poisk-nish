@@ -225,7 +225,7 @@ def render_home_page():
         </div>
         
         <div class="footer">
-            Создано <a href="https://t.me/glxaoc" target="_blank">@glxaoc</a> • Санкт-Петербург, 2026
+            Создано <a href="https://t.me/ivandrobitko" target="_blank">@ivandrobitko</a> • 2026
         </div>
     </div>
 </body>
