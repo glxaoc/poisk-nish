@@ -3,6 +3,7 @@
 Wordstat Analytics - Сервис анализа поискового спроса
 """
 from flask import Flask, render_template_string, request, jsonify
+from templates_home import render_home_page
 import requests
 import threading
 
@@ -15,6 +16,14 @@ TOKEN = "y0__xCHu4rZARjd0Dogyfj_7RQJLwxI8zao8Pru2PA2l5w2HjR6dA"
 BASE_URL = "https://api.wordstat.yandex.net"
 HEADERS = {"Content-Type": "application/json;charset=utf-8", "Authorization": f"Bearer {TOKEN}"}
 REGIONS = {0: "Все регионы", 225: "Россия", 213: "Москва", 1: "Московская область", 2: "Санкт-Петербург", 54: "Екатеринбург", 65: "Новосибирск", 43: "Казань", 35: "Краснодар"}
+
+
+# ==================== ГЛАВНАЯ СТРАНИЦА ====================
+
+@app.route('/')
+def home():
+    """Главная страница сервиса"""
+    return render_home_page()
 
 # ==================== СТРАНИЦА АНАЛИЗА НИШИ ====================
 
@@ -651,4 +660,4 @@ def api_analyze_v2():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, threaded=True)
+    app.run(host='127.0.0.1', port=5000, threaded=True)
